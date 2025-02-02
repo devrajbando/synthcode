@@ -1,20 +1,22 @@
 import React, { useState, useRef, useEffect } from "react";
-import { HStack, Box } from "@chakra-ui/react";
+import { HStack, Box, Button, Text, useClipboard } from "@chakra-ui/react";
+import { Copy, Check } from "lucide-react";
 
 export default function GenerateDoc() {
-
-const [showDocInput, setShowDocInput] = useState(false);
+  const [showDocInput, setShowDocInput] = useState(false);
   const [functionText, setFunctionText] = useState("");
   const [isGeneratingDoc, setIsGeneratingDoc] = useState(false);
+  const [generatedDoc, setGeneratedDoc] = useState("");
   const editorRef = useRef(null);
-const handleDocSubmit = async () => {
+  const { hasCopied, onCopy } = useClipboard(generatedDoc);
+
+  const handleDocSubmit = async () => {
     if (!functionText.trim()) return;
     
     setIsGeneratingDoc(true);
     try {
-      // Here you would typically make an API call to your AI service
-      // For now, let's simulate a response
-      const docString = generateSimpleDocString(functionText);
+      const docString = await generateSimpleDocString(functionText);
+      setGeneratedDoc(docString);
       
       // Insert the docstring at the start of the function in the editor
       if (editorRef.current) {
@@ -45,73 +47,131 @@ const handleDocSubmit = async () => {
     }
   };
 
-  // Helper function to generate a simple docstring (replace with AI service call)
   const generateSimpleDocString = async(functionText) => {
     try {
-        // console.log(functionText)
-        const response = await fetch('http://localhost:8000/ai/generateDoc', {
-            method: 'POST',
-           
-            headers: {
-              'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(
-            {functionText}
-          ),
-          });
-        
-        const data = await response.json();
-        console.log(data);
-        
-        
-      } catch (error) {
-        console.log(error)
-      }
+      const response = await fetch('http://localhost:8000/ai/generateDoc', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ functionText }),
+      });
+      
+      const data = await response.json();
+      console.log(data)
+      return data.docstring; // Assuming the API returns the doc in this format
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
   };
 
+  const handleApplyDoc = () => {
+    if (editorRef && editorRef.current && generatedDoc) {
+      const editor = editorRef.current;
+      const position = editor.getPosition();
+      editor.executeEdits('insert-doc', [{
+        range: {
+          startLineNumber: position.lineNumber,
+          startColumn: position.column,
+          endLineNumber: position.lineNumber,
+          endColumn: position.column
+        },
+        text: generatedDoc
+      }]);
+    }
+  };
 
+  return (
+    <Box className="space-y-4">
+      <Button
+        colorScheme="blue"
+        onClick={() => setShowDocInput(true)}
+        className="px-4 py-2 rounded"
+      >
+        Generate Doc String
+      </Button>
 
-  return(
+      {showDocInput && (
+        <Box className="mt-4 space-y-2">
+          <textarea
+            className="w-full p-2 border border-gray-300 rounded"
+            rows={4}
+            placeholder="Paste the function you want to document here..."
+            value={functionText}
+            onChange={(e) => setFunctionText(e.target.value)}
+          />
+          <HStack spacing={2}>
+            <Button
+              colorScheme="green"
+              onClick={handleDocSubmit}
+              isLoading={isGeneratingDoc}
+              isDisabled={isGeneratingDoc || !functionText.trim()}
+            >
+              {isGeneratingDoc ? 'Generating...' : 'Submit'}
+            </Button>
+            <Button
+              colorScheme="gray"
+              onClick={() => {
+                setShowDocInput(false);
+                setFunctionText("");
+              }}
+            >
+              Cancel
+            </Button>
+          </HStack>
+        </Box>
+      )}
 
-    <>
-    <Box className="mt-4 space-y-4">
-                <button
-                  className="bg-blue-800 text-white text-lg px-4 py-2 rounded hover:bg-blue-700 transition-colors"
-                  onClick={() => setShowDocInput(true)}
-                >
-                  Generate Doc String
-                </button>
-
-                {showDocInput && (
-                  <div className="mt-4 space-y-2">
-                    <textarea
-                      className="w-full p-2 border border-gray-300 rounded text-white"
-                      rows={4}
-                      placeholder="Paste the function you want to document here..."
-                      value={functionText}
-                      onChange={(e) => setFunctionText(e.target.value)}
-                    />
-                    <button
-                      className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-500 transition-colors disabled:bg-gray-400"
-                      onClick={handleDocSubmit}
-                      disabled={isGeneratingDoc || !functionText.trim()}
-                    >
-                      {isGeneratingDoc ? 'Generating...' : 'Submit'}
-                    </button>
-                    <button
-                      className="ml-2 bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-500 transition-colors"
-                      onClick={() => {
-                        setShowDocInput(false);
-                        setFunctionText("");
-                      }}
-                    >
-                      Cancel
-                    </button>
-                  </div>
-                )}
-              </Box>
-    
-    </>
-  )
-
+      {generatedDoc && (
+        <Box
+          mt={4}
+          p={4}
+          borderRadius="md"
+          bg="black"
+          color="white"
+          border="1px"
+          borderColor="gray.200"
+        >
+          <HStack justify="space-between" mb={2}>
+            <Text fontSize="sm" fontWeight="medium" color="gray.600">
+              Generated Documentation:
+            </Text>
+            <HStack spacing={2}>
+              <Button
+                size="sm"
+                colorScheme="green"
+                onClick={handleApplyDoc}
+              >
+                Apply to Editor
+              </Button>
+              <Button
+                size="sm"
+                variant="ghost"
+                onClick={onCopy}
+                leftIcon={hasCopied ? <Check size={16} /> : <Copy size={16} />}
+              >
+                {hasCopied ? 'Copied!' : 'Copy'}
+              </Button>
+            </HStack>
+          </HStack>
+          <Box
+            as="pre"
+            p={3}
+            borderRadius="md"
+            bg="black"
+            color="white"
+            fontSize="sm"
+            fontFamily="monospace"
+            whiteSpace="pre-wrap"
+            wordBreak="break-word"
+            maxH="300px"
+            overflowY="auto"
+          >
+            {generatedDoc}
+          </Box>
+        </Box>
+      )}
+    </Box>
+  );
 }

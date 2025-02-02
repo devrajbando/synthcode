@@ -87,7 +87,6 @@ async def autocomplete(request: autoCompleteRequest):
     
 class fixSyntaxRequest(BaseModel):
     codeSnippet : str
-    errorMessage : str
     maxLen : int = 200
 
 @app.post("/fixsyntax")
@@ -95,14 +94,13 @@ class fixSyntaxRequest(BaseModel):
 async def fixsyntax(request: fixSyntaxRequest):
     try:
         prompt = f"""
-        You are an AI code assistant. Given the following code snippet and error message, identify the mistake and provide a corrected version.
+        You are an AI code assistant. Given the following code snippet, identify the mistake and provide a corrected version.
 
         Code:
         {request.codeSnippet}
 
-        Error:
-        {request.errorMessage}
-
+        
+        
         Fix the error and return only the corrected code.
         """
         inputs = tokenizer(prompt, return_tensors="pt", padding=True, truncation=True, max_length=request.maxLen)
@@ -164,7 +162,7 @@ async def generateDocstring(request: docStringRequest):
                 top_k=None,
                 top_p=None,
                 pad_token_id=tokenizer.eos_token_id,
-                do_sample=False,
+                # do_sample=False,
                 do_sample=False,
                 no_repeat_ngram_size=2,
             )

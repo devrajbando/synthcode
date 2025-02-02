@@ -6,6 +6,7 @@ import Language from "./Languages";
 import C from "./codesnippet";
 import Output from "./Output";
 import GenerateDoc from "./GenerateDoc";
+import CodeSnippetGenerator from "./CodeSnippetGenerator";
 export default function Edit() {
   const [language, setLanguage] = useState("javascript");
   const editorRef = useRef(null);
@@ -131,14 +132,14 @@ export default function Edit() {
   
   return (
     <>
-    <div className="mt-[100px]">
+    
 
     <Box>
       <HStack>
         <Box w="50%">
           <Language language={language} onSelect={onSelect} />
           <Editor
-            height="90vh"
+            height="60vh"
             theme="vs-dark"
             language={language}
             onMount={handleEditorDidMount}
@@ -148,13 +149,14 @@ export default function Edit() {
             />
             
         <GenerateDoc/>
+        <CodeSnippetGenerator/>
         </Box>
         <Box w="50%">
           <Output editorRef={editorRef} language={language} />
         </Box>
       </HStack>
     </Box>
-            </div>
+         
             </>
   );
 }

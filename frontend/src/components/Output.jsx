@@ -1,14 +1,15 @@
 import { useState } from "react";
-import { Box, Button, Text,  } from "@chakra-ui/react";
+import { Box, Button, Text,HStack  } from "@chakra-ui/react";
 import { executeCode } from "./api";
 import { Toaster, toaster } from "./ui/toaster"
+import FixSyntax from "./FixSyntax";
 const Output = ({ editorRef, language }) => {
 //   const toast = useToast();
 
   const [output, setOutput] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
-
+  
   const runCode = async () => {
     const sourceCode = editorRef.current.getValue();
     if (!sourceCode) return;
@@ -30,20 +31,32 @@ const Output = ({ editorRef, language }) => {
     }
   };
 
+  
+
+
+  
+
+
   return (
     <Box w="50%">
       <Text mb={2} fontSize="lg">
         Output
       </Text>
+      <HStack>
+
       <Button
         variant="outline"
         colorScheme="green"
         mb={4}
         isLoading={isLoading}
         onClick={runCode}
-      >
+        >
         Run Code
       </Button>
+
+      {isError && <FixSyntax editorRef={editorRef} language={language} output={output} />}
+        </HStack>
+
       <Box
         height="75vh"
         p={2}
