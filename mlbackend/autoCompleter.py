@@ -153,11 +153,11 @@ async def generateDocstring(request: docStringRequest):
                 input_ids=input_ids,
                 attention_mask=attention_mask,
                 max_length=4096,
-                temperature = 0.7,
-                top_k=20,
-                top_p=0.7,
+                temperature=None,
+                top_k=None,
+                top_p=None,
                 pad_token_id=tokenizer.eos_token_id,
-                do_sample=True,
+                do_sample=False,
                 no_repeat_ngram_size=2,
             )
 
