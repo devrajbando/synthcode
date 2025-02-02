@@ -6,7 +6,13 @@ from pydantic import BaseModel
 from transformers import AutoModelForCausalLM, AutoTokenizer
 import torch
 import re
+from flask_cors import CORS
 from fastapi.middleware.cors import CORSMiddleware
+from flask import Flask, request, jsonify,current_app
+
+application = Flask(__name__)
+
+CORS(application)
 
 def remove_prompt(output):
     corrected_code = re.sub(r'.*Fix the error and return only the corrected code.\s*', '', output, flags=re.DOTALL)
@@ -132,6 +138,7 @@ class docStringRequest(BaseModel):
 
 async def generateDocstring(request: docStringRequest):
     try:
+        
         if not request.codeSnippet:
             raise HTTPException(status_code=400, detail="Code snippet is required")
 
@@ -153,10 +160,11 @@ async def generateDocstring(request: docStringRequest):
                 input_ids=input_ids,
                 attention_mask=attention_mask,
                 max_length=4096,
-                temperature=None,
+                temperature = None,
                 top_k=None,
                 top_p=None,
                 pad_token_id=tokenizer.eos_token_id,
+                do_sample=False,
                 do_sample=False,
                 no_repeat_ngram_size=2,
             )
@@ -214,3 +222,8 @@ async def suggest_snippet(request: snippetRequest):
     
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+    
+
+
+if __name__ == '__main__':
+    application.run(host='127.0.0.1', port=5020, debug=True)
