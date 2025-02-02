@@ -159,7 +159,7 @@ async def generateDocstring(request: docStringRequest):
             output = model.generate(
                 input_ids=input_ids,
                 attention_mask=attention_mask,
-                max_length=request.maxLen,
+                max_length=4096,
                 temperature = None,
                 top_k=None,
                 top_p=None,
