@@ -136,7 +136,7 @@ async def generateDocstring(request: docStringRequest):
             raise HTTPException(status_code=400, detail="Code snippet is required")
 
         prompt = f'''
-        Generate a clear and concise docstring for the following function or class or code:
+        Generate a clear and concise documentation for the following code:
 
         Code:
         {request.codeSnippet}
@@ -152,7 +152,7 @@ async def generateDocstring(request: docStringRequest):
             output = model.generate(
                 input_ids=input_ids,
                 attention_mask=attention_mask,
-                max_length=request.maxLen,
+                max_length=4096,
                 temperature = 0.7,
                 top_k=20,
                 top_p=0.7,
