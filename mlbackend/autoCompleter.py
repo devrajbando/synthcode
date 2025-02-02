@@ -6,6 +6,7 @@ from pydantic import BaseModel
 from transformers import AutoModelForCausalLM, AutoTokenizer
 import torch
 import re
+from fastapi.middleware.cors import CORSMiddleware
 
 def remove_prompt(output):
     corrected_code = re.sub(r'.*Fix the error and return only the corrected code.\s*', '', output, flags=re.DOTALL)
@@ -33,6 +34,15 @@ model = AutoModelForCausalLM.from_pretrained(MODEL_NAME, torch_dtype=torch.float
 print("Model loaded successfully")
 
 app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 
 @app.get("/")
 def root():
