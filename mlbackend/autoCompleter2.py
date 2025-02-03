@@ -43,6 +43,24 @@ def extract_code_features(code):
 
     return features
 
+def extract_error(error_message, language):
+    
+    if language=="python":
+        match = re.search(r'(^\w+Error: .*)', error_message, re.MULTILINE)
+
+    elif language=="javascript":
+        match = re.search(r'(^.*Error: .*)', error_message, re.MULTILINE)
+
+    elif language=="java":
+        match = re.search(r'(^\S+\.java:\d+: error: .*)', error_message, re.MULTILINE)
+
+        if not match:
+            match =  re.search(r'(^Exception in thread .*)', error_message, re.MULTILINE)
+    else:
+        print("Unsupported language")
+    
+    return match.group(1) if match else "Unknown error format"
+
 
 MODEL_NAME = 'Qwen/Qwen2.5-Coder-0.5B-Instruct'
 device = "cuda" if torch.cuda.is_available() else "cpu"
@@ -100,19 +118,25 @@ async def autocomplete(request: autoCompleteRequest):
     
 class fixSyntaxRequest(BaseModel):
     codeSnippet : str
-    # errorMessage : str
+    errorMessage : str
+    language : str
     maxLen : int = 200
 
 @app.post("/fixsyntax")
 
 async def fixsyntax(request: fixSyntaxRequest):
     try:
+
+        extractedError = extract_error(request.errorMessage, request.language)
+
         prompt = f"""
-        You are an AI code assistant. Given the following code snippet, identify the mistake and provide a corrected version.
+        You are an AI code assistant. The following code is given to you along with the error. Return the corrected code.
 
         Code:
         {request.codeSnippet}
 
+        Error:
+        {extractedError}
         
 
         Fix the error and return only the corrected code.
