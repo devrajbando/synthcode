@@ -1,8 +1,7 @@
 import mongoose,{Schema} from 'mongoose';
-const Schema = mongoose.Schema;
 
 // Folder Schema
-const FolderSchema = new Schema({
+const FolderSchema = new mongoose.Schema({
     name: {
       type: String,
       required: true,

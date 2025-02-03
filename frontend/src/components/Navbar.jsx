@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { Home, Users, Mail, Code, Menu, X, LogIn } from 'lucide-react';
-
+import {useNavigate} from "react-router-dom"
+import { Home, Users, Mail, Code, Menu, X, LogIn,User, LogOut, Settings } from 'lucide-react';
+import { useAuthContext } from '../hooks/useAuthContext'
 const NavLink = ({ href, icon, text }) => (
   <a
     href={href}
@@ -22,26 +23,32 @@ const MobileNavLink = ({ href, icon, text }) => (
 );
 
 const AuthButtons = () => (
+  <>
+  
   <div className="flex items-center space-x-4">
     <a
       href="/login"
       className="flex items-center space-x-1 hover:text-blue-400 transition-colors"
-    >
+      >
       <LogIn className="w-4 h-4" />
       <span>Login</span>
     </a>
     <a
       href="/signup"
       className="bg-blue-500 hover:bg-blue-600 px-4 py-2 rounded-lg transition-colors"
-    >
+      >
       Sign Up
     </a>
   </div>
+  
+      </>
 );
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-
+  const { user } = useAuthContext()
+  const navigate = useNavigate();
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   return (
     <nav className="bg-gray-900 text-white py-4 fixed w-full top-0 z-50">
       <div className="container mx-auto px-4">
@@ -57,7 +64,45 @@ const Navbar = () => {
             <NavLink href="/about" icon={<Users className="w-4 h-4" />} text="About Us" />
             
             <NavLink href="/create" icon={<Code className="w-4 h-4" />} text="Create" />
+            {!user &&
             <AuthButtons />
+            }
+            {user &&
+             <div className="relative">
+             <button 
+               onMouseEnter={() => setIsDropdownOpen(true)}
+               onMouseLeave={() => setIsDropdownOpen(false)}
+               className="bg-gray-900 text-white rounded-full w-10 h-10 flex items-center justify-center hover:bg-blue-900 transition-colors"
+             >
+               <User className="w-6 h-6" />
+             </button>
+   
+             {isDropdownOpen && (
+               <div 
+                 onMouseEnter={() => setIsDropdownOpen(true)}
+                 onMouseLeave={() => setIsDropdownOpen(false)}
+                 className="absolute right-0 top-full w-48 bg-white rounded-lg shadow-lg border border-gray-200 z-50"
+               >
+                 <div className="py-1">
+                   <button 
+                     onClick={()=>{navigate('/profile')}}
+                     className="flex text-gray-800 items-center w-full px-4 py-2 text-left hover:bg-gray-400 transition-colors"
+                   >
+                     <Settings className="w-5 h-5 mr-3 text-gray-600" />
+                     Profile
+                   </button>
+                   <button 
+                     onClick={() => {navigate('/signout')}}
+                     className="flex items-center w-full px-4 py-2 text-left hover:bg-gray-400 transition-colors text-red-600"
+                   >
+                     <LogOut className="w-5 h-5 mr-3" />
+                     Sign Out
+                   </button>
+                 </div>
+               </div>
+             )}
+           </div>
+            }
           </div>
 
           {/* Mobile Menu Button */}
@@ -76,6 +121,7 @@ const Navbar = () => {
             <MobileNavLink href="/about" icon={<Users className="w-4 h-4" />} text="About Us" />
             
             <MobileNavLink href="/create" icon={<Code className="w-4 h-4" />} text="Create" />
+            {!user &&
             <div className="px-4 py-2 space-y-2">
               <a
                 href="/login"
@@ -91,6 +137,7 @@ const Navbar = () => {
                 Sign Up
               </a>
             </div>
+            }
           </div>
         )}
       </div>

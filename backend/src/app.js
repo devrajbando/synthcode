@@ -5,6 +5,7 @@ import { createServer } from 'node:http';
 import { Server } from 'socket.io';
 import userRouter from './routes/user.routes.js';
 import aiRouter from './routes/doc.routes.js';
+import projectRouter from './routes/project.routes.js';
 
 
 const app=express()
@@ -32,6 +33,7 @@ app.use(cookieParser())
 
 app.use('/api/users', userRouter);
 app.use('/ai',aiRouter)
+app.use('/api/project',projectRouter)
 
 
 const server = createServer(app);

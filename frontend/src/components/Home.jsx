@@ -40,7 +40,7 @@ export default function Home() {
             <h1 className="text-6xl text-white text-left mt-[140px] py-10">
               AI Powered Code Collaborator
             </h1>
-            <h2 className="text-2xl w-3/4 font-thin text-left py-5 text-white">
+            <h2 className="text-2xl font-normal w-3/4 text-left py-5 text-white">
             Experience real-time code collaboration powered by advanced AI
             </h2>
             <button
@@ -84,7 +84,7 @@ export default function Home() {
           scale={1}
           threshold={0.1}
         >
-        <section className="py-16">
+        <section className="py-16 my-auto">
             <div className="container mx-auto px-4">
             <h2 className="text-3xl font-bold text-center mb-12">Key Features</h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -137,7 +137,9 @@ export default function Home() {
            <img src="../assets/coding.png" alt="" />
             <h2 className="text-6xl font-semibold text-white">Create Now</h2>
             <p className="text-2xl text-white mt-20 mb-8">We leverage advanced AI algorithms to analyze urban environments and biodiversity patterns.<br/> Our platform examines data from various sources, such as satellite imagery, city infrastructure, <br/> and ecosystem reports, to provide comprehensive insights.</p>
-            <button className="btn btn-outline btn-light">Analyze Now</button>
+            <button className="btn btn-outline btn-light"
+            onClick={()=>navigate('/project')}
+            >Analyze Now</button>
           </div>
         </AnimatedContent>
       </div>

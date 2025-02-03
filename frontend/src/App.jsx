@@ -14,6 +14,10 @@ import Login from './components/Login';
 import Signup from './components/Signup';
 import About from './components/About';
 import ProtectedRoute from './components/ProtectedRoute';
+import Create from './components/Create';
+import Profile from './components/Profile';
+import SignOut from './components/Signout';
+import Project from './components/Project';
 
 
 
@@ -22,7 +26,7 @@ function App() {
   
   return (
     <>
-    {/* <AuthProvider> */}
+    <AuthProvider>
       <Router>
           <Provider>
           <Navbar/>
@@ -32,15 +36,18 @@ function App() {
           <Route path="/file" element={<FileExplorer />} />
           <Route path="/" element={<Home />} />
           <Route path="/create" element={<Edit />} />
-          
+          <Route path="/new-project" element={<Project />} />
           <Route path="/login" element={<Login/>} />
           <Route path="/signup" element={<Signup/>} />
-       
+          <Route path="/signout" element={<SignOut/>} />
+          <Route path="/project" element={<Create/>} />
+          <Route path="/profile" element={<Profile/>} />
+          
         </Routes>
       <Footer/>
     </Provider>
       </Router>
-    {/* </AuthProvider> */}
+    </AuthProvider>
       
       
       {/* <Edit/> */}

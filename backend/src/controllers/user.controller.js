@@ -121,10 +121,17 @@ const LoginUser=asyncHandler(async(req,res)=>{
     if(!user)
         throw new ApiError(404,"user does  not exist")
 
+    console.log(password)
+    console.log(user.password)
+
+    // const isPasswordValid=password === user.password ? true:false
+
     const isPasswordValid=await bcrypt.compare(
 		password,
 		user.password)
-
+    
+        
+        console.log(isPasswordValid)
     if(!isPasswordValid)
         throw new ApiError(401,"INCORRECT password")
 
@@ -164,6 +171,10 @@ const LogoutUser=asyncHandler(async(req,res)=>{
     const isPasswordValid=await bcrypt.compare(
         password,
 		user.password)
+        // console.log(isPasswordValid)
+        console.log(password)
+        console.log(user.password)
+    // const isPasswordValid=password === user.password ? true:false
         if(!isPasswordValid)
             throw new ApiError(401,"INCORRECT password")
         
@@ -190,10 +201,50 @@ const LogoutUser=asyncHandler(async(req,res)=>{
         .json(new ApiResponse(200,{},"User logged Out"))
     })
 
+const ChangePassword=asyncHandler(async(req,res)=>{
+    const {oldPassword, newPassword}=req.body
+    const user=await User.findById(req.user._id)
+    const isPasswordValid=await bcrypt.compare(
+        oldPassword,
+		user.password)
+        // const isPasswordValid=password === user.password ? true:false
+        if(!isPasswordValid)
+            throw new ApiError(401,"INCORRECT password")
+        const hashedPassword = await bcrypt.hash(newPassword, 10);
+        await User.findByIdAndUpdate(req.user?._id,
+            {
+                $set:{
+                    password:hashedPassword
+                }
+            },
+            {new:true} 
+        ).select("-password")
+    await user.save({validateBeforeSave:false})
+
+
+    
+
+    return res
+    .status(200)
+    .json(new ApiResponse(200,{},"Password changed Successfully"))
+    })
+
+const CurrentUser=asyncHandler(async(req,res)=>{
+    const user=await User.findById(req.user._id)
+    const email=user.email
+    const username=user.username
+    return res
+    .status(200)
+    .json(new ApiResponse(200,{email,username},"User data"))
+    
+})
+
 export {generateAccessAndRefreshToken,
     // verifyEmail,
     registerUser,
     LoginUser,
     LogoutUser
-    ,checkAuth
+    ,checkAuth,
+    ChangePassword,
+    CurrentUser
 }

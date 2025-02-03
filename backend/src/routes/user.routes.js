@@ -1,5 +1,5 @@
 import { Router } from "express";
-import {registerUser,LoginUser,LogoutUser} from '../controllers/user.controller.js'
+import {registerUser,LoginUser,LogoutUser,ChangePassword,CurrentUser} from '../controllers/user.controller.js'
 
 import {verifyJWT,validateToken} from '../middlewares/auth.middleware.js'
 // import { Token } from "../models/token.model.js";
@@ -13,6 +13,8 @@ const userRouter=Router()
 userRouter.route('/signup').post(registerUser)
 userRouter.route('/login').post(LoginUser)
 userRouter.route('/logout').post(verifyJWT,LogoutUser)
+userRouter.route('/change-pass').post(verifyJWT,ChangePassword)
+userRouter.route('/current-user').post(verifyJWT,CurrentUser)
 
 
 export default userRouter

@@ -1,8 +1,8 @@
 import mongoose,{Schema} from 'mongoose';
-const Schema = mongoose.Schema;
+import {Folder} from './folder.model.js'
 
 // Project Schema 
-const ProjectSchema = new Schema({
+const ProjectSchema = new mongoose.Schema({
     name: {
       type: String,
       required: true,
@@ -26,7 +26,11 @@ const ProjectSchema = new Schema({
       required: true,
       unique: true
     },
-    rootFolder: FolderSchema,
+    rootFolder: {
+
+      type: Schema.Types.ObjectId,
+      ref: 'Folder'
+    },
     comments: [{
       type: Schema.Types.ObjectId,
       ref: 'Comment'
