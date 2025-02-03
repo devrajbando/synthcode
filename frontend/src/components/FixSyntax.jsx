@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 
 import { toaster } from "./ui/toaster";
-import { Button, Box, HStack, Text, useClipboard } from "@chakra-ui/react";
+import { Button, Box, HStack, Text, useClipboard,Spinner } from "@chakra-ui/react";
 
 export default function FixSyntax({ editorRef, language, output }) { 
   const [isFixing, setIsFixing] = useState(false);
   const [fixedCodde, setFixedCode] = useState('');
+  const [isOpen, setIsOpen] = useState(false);
   const fixSyntaxError = async (language, code, errorMessage) => {
     try {
       const response = await fetch('http://localhost:8000/ai/fix-syntax', {
@@ -43,6 +44,7 @@ export default function FixSyntax({ editorRef, language, output }) {
       if (fixedCode) {
         // editorRef.current.setValue(fixedCode);
         setFixedCode(fixedCode);
+        setIsOpen(true)
         toaster.create({
           title: "Code Fixed",
           description: "The syntax has been corrected. Please review the changes.",
@@ -63,68 +65,89 @@ export default function FixSyntax({ editorRef, language, output }) {
   };
 
   return (
-    <Box>
-      <HStack spacing={4} mb={4}>
-        <Button
-          variant="outline"
-          colorScheme="blue"
-          isLoading={isFixing}
-          onClick={handleFixSyntax}
-        >
-          Fix Syntax
-        </Button>
-        
-        {/* {fixedCodde && (
-          <HStack>
-            <Button
-              variant="solid"
-              colorScheme="green"
-              size="md"
-              onClick={handleApplyFix}
-            >
-              Apply Fix
-            </Button>
-            <Button
-              variant="ghost"
-              size="md"
-              onClick={onCopy}
-              leftIcon={hasCopied ? <Check size={16} /> : <Copy size={16} />}
-            >
-              {hasCopied ? 'Copied!' : 'Copy'}
-            </Button>
-          </HStack>
-        )} */}
-      </HStack>
+    <>
+    <Button
+  variant="outline"
+  colorScheme="blue"
+  isLoading={isFixing} // Show loading spinner when processing
+  loadingText="Fixing..."
+  spinnerPlacement="start"
+  onClick={handleFixSyntax}
+>
+  <span className="rounded-lg border-2 border-gray-500 px-2 text-green-700 font-bold py-1 mb-4 mx-2">
+    Fix Syntax
+  </span>
+</Button>
 
-      {fixedCodde && (
-        <Box
-          p={4}
-          borderRadius="md"
-          bg="black"
-          border="1px"
-          borderColor="gray.900"
-          position="relative"
-          maxH="300px"
-          overflowY="auto"
-        >
-          <Text fontSize="sm" mb={2} color="gray.500">
-            Fixed Code:
-          </Text>
-          <Box
-         
-            as="pre"
-            p={3}
-            borderRadius="md"
-            bg="black"
-            fontSize="sm"
-            fontFamily="monospace"
-            whiteSpace="pre-wrap"
-            wordBreak="break-word"
-          >
-            {fixedCodde}
-          </Box>
-        </Box>
-      )}
+{isFixing && ( // Show loading circle while fixing syntax
+  <Box
+    display="flex"
+    justifyContent="center"
+    alignItems="center"
+    position="fixed"
+    top="50%"
+    left="50%"
+    transform="translate(-50%, -50%)"
+    zIndex={1100}
+  >
+    <Spinner size="xl" color="blue.500" />
+  </Box>
+)}
+
+{isOpen && (
+  <Box
+    position="fixed"
+    top="20%"
+    right="10%"
+    zIndex={1000}
+    maxWidth="400px"
+    width="100%"
+    bg="gray.900"
+    boxShadow="xl"
+    borderRadius="md"
+    border="1px"
+    borderColor="gray.200"
+  >
+    <Box 
+      p={4} 
+      borderBottom="1px" 
+      borderColor="gray.200"
+      display="flex"
+      justifyContent="space-between"
+      alignItems="center"
+    >
+      <Text fontWeight="bold">Fixed Code</Text>
+      <Button
+        size="sm"
+        variant="ghost"
+        onClick={() => setIsOpen(false)}
+      >
+        ✕
+      </Button>
     </Box>
+
+    <Box
+      p={4}
+      maxH="300px"
+      overflowY="auto"
+      bg="black"
+    >
+      <Box
+        as="pre"
+        p={3}
+        borderRadius="md"
+        fontSize="sm"
+        fontFamily="monospace"
+        whiteSpace="pre-wrap"
+        wordBreak="break-word"
+        color="white"
+      >
+        {fixedCodde}
+      </Box>
+    </Box>
+  </Box>
+)}
+
+  </>
   );
 }

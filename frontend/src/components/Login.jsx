@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useContext } from 'react';
 import { AuthContext } from '../context/AuthContext';
-
+import AnimatedContent from "./ui/AnimateContent";
 import { Link } from 'react-router-dom';
 import { Mail, Lock, AlertCircle } from 'lucide-react';
 export default function Login() {
@@ -58,12 +58,23 @@ export default function Login() {
 
   return (
     <>
-    <div className="min-h-screen flex items-center justify-center bg-gray-900 py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-md w-full space-y-8 bg-white p-8 rounded-lg shadow-md">
+    <AnimatedContent
+          distance={80}
+          direction="horizontal"
+          reverse={false}
+          config={{ tension: 50, friction: 25 }}
+          initialOpacity={0.2}
+          animateOpacity
+          scale={1.2}
+          threshold={0.2}
+        >
+    <div className="min-h-screen flex items-center justify-center bg-blue-950 py-12 px-4 sm:px-6 lg:px-8">
+
+      <div className="max-w-md w-full space-y-8 bg-gray-900 p-8 rounded-lg shadow-md">
         {/* Header */}
         <div className="text-center">
-          <h2 className="text-3xl font-bold text-gray-900">Welcome back</h2>
-          <p className="mt-2 text-sm text-gray-600">
+          <h2 className="text-3xl font-bold text-gray-100">Welcome back</h2>
+          <p className="mt-2 text-sm text-gray-400">
             Don't have an account?{' '}
             <Link to="/signup" className="font-medium text-blue-600 hover:text-blue-500">
               Sign up
@@ -86,7 +97,7 @@ export default function Login() {
           <div className="space-y-4">
             {/* Email Input */}
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+              <label htmlFor="email" className="block text-sm font-medium text-gray-100">
                 Email address
               </label>
               <div className="mt-1 relative">
@@ -101,13 +112,13 @@ export default function Login() {
                   onChange={(e) => setEmail(e.target.value)}
                   className="appearance-none block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
                   placeholder="Enter your email"
-                />
+                  />
               </div>
             </div>
 
             {/* Password Input */}
             <div>
-              <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+              <label htmlFor="password" className="block text-sm font-medium text-gray-100">
                 Password
               </label>
               <div className="mt-1 relative">
@@ -122,7 +133,7 @@ export default function Login() {
                   onChange={(e) => setPassword(e.target.value)}
                   className="appearance-none block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
                   placeholder="Enter your password"
-                />
+                  />
               </div>
             </div>
           </div>
@@ -144,6 +155,7 @@ export default function Login() {
         </form>
       </div>
     </div>
+            </AnimatedContent>
     </>
   );
 };

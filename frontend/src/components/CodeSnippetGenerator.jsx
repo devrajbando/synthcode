@@ -44,10 +44,10 @@ const CodeSnippetGenerator = () => {
   };
 
   return (
-    <div className="mt-4 space-y-4">
+    <div className="mt-12 space-y-4 z-10">
       {/* Generate Snippet Button */}
       <button
-        className="bg-purple-600 text-white px-4 py-2 rounded hover:bg-purple-700 transition-colors"
+        className="bg-purple-900 text-white px-4 py-2 rounded hover:bg-purple-950 hover:scale-105 transition-all duration-200"
         onClick={() => setShowInput(true)}
       >
         Generate Snippet
@@ -56,7 +56,7 @@ const CodeSnippetGenerator = () => {
       {/* Input Modal */}
       {showInput && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-lg p-6 max-w-2xl w-full">
+          <div className="bg-blue-950 rounded-lg p-6 max-w-2xl w-full">
             <h3 className="text-lg font-semibold mb-4">Generate Code Snippet</h3>
             
             <textarea
@@ -93,23 +93,46 @@ const CodeSnippetGenerator = () => {
 
       {/* Generated Snippet Display */}
       {generatedSnippet && (
-        <div className="mt-4 border rounded-lg p-4">
-          <h4 className="font-semibold mb-2">Generated Snippet:</h4>
-          <pre className="bg-gray-900 p-4 rounded overflow-x-auto text-white">
-            <code>{generatedSnippet}</code>
-          </pre>
-          <button
-            className="mt-2 text-sm text-gray-600 hover:text-gray-800"
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4">
+        <div className="bg-purple-950 rounded-lg p-6 max-w-2xl w-full">
+          <h3 className="text-lg font-semibold mb-4">Generated Code Snippet</h3>
+          
+          <p
+            className="w-full h-40 p-3 border border-gray-300 bg-black overflow-y-auto rounded mb-4 font-mono"
+            value={inputCode}
+            onChange={(e) => setInputCode(e.target.value)}
+            placeholder="Enter your code here..."
+          >
+            {generatedSnippet}</p>
+
+          {error && (
+            <div className="text-red-500 mb-4">
+              {error}
+            </div>
+          )}
+
+          <div className="flex justify-end gap-3">
+            <button
+              className="px-4 py-2 text-gray-300 hover:bg-blue-950 rounded"
+              onClick={handleClose}
+            >
+              Close
+            </button>
+            <button
+            className=" text-sm text-gray-400 hover:text-gray-100"
             onClick={() => {
               navigator.clipboard.writeText(generatedSnippet);
             }}
           >
             Copy to Clipboard
           </button>
+          </div>
         </div>
+      </div>
       )}
     </div>
   );
 };
 
 export default CodeSnippetGenerator;
+
