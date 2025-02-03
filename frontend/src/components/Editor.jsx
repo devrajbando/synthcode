@@ -11,6 +11,7 @@ export default function Edit() {
   const [language, setLanguage] = useState("javascript");
   const editorRef = useRef(null);
   const socket = useRef(null);
+ 
   const [userHighlights, setUserHighlights] = useState({}); // { userId: { lineNumber, color } }
   const decorationsRef = useRef([]);
 
@@ -115,9 +116,10 @@ export default function Edit() {
   const onSelect = (newLanguage) => {
     setLanguage(newLanguage);
     const defaultCode = C.CODE_SNIPPETS[newLanguage] || "";
-    // if (editorRef.current) {
-    //   editorRef.current.setValue(defaultCode);
-    // }
+    
+    if (editorRef.current) {
+      editorRef.current.setValue(defaultCode);
+    }
   };
 
   const sendCode = (newCode) => {
@@ -126,7 +128,7 @@ export default function Edit() {
     }
   };
 
-
+  
 
 
   
@@ -134,10 +136,17 @@ export default function Edit() {
     <>
     
 
-    <Box>
-      <HStack>
-        <Box w="50%">
+      
+    <Box >
+
+      <HStack bg="blue.950" display="flex" justifyContent="center" alignItems="top" >
+        <Box w="60%">
+          <HStack display="flex" justifyContent="start" alignItems="top">
+
           <Language language={language} onSelect={onSelect} />
+           
+          <CodeSnippetGenerator/>
+          </HStack>
           <Editor
             height="60vh"
             theme="vs-dark"
@@ -148,14 +157,17 @@ export default function Edit() {
             options={{ renderWhitespace: "all" }}
             />
             
-        <GenerateDoc/>
-        <CodeSnippetGenerator/>
+            <GenerateDoc/>
         </Box>
-        <Box w="50%">
-          <Output editorRef={editorRef} language={language} />
-        </Box>
+
+        
+        <Box w="30%" >
+        <Output editorRef={editorRef} language={language} />
+      </Box>
+
       </HStack>
     </Box>
+            
          
             </>
   );

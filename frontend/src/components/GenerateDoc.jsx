@@ -8,7 +8,7 @@ export default function GenerateDoc() {
   const [isGeneratingDoc, setIsGeneratingDoc] = useState(false);
   const [generatedDoc, setGeneratedDoc] = useState("");
   const editorRef = useRef(null);
-  const { hasCopied, onCopy } = useClipboard(generatedDoc);
+  const [ hasCopied, setHasCopied ] = useState(false);
 
   const handleDocSubmit = async () => {
     if (!functionText.trim()) return;
@@ -83,11 +83,11 @@ export default function GenerateDoc() {
   };
 
   return (
-    <Box className="space-y-4">
+    <Box className="space-y-4 my-3">
       <Button
         colorScheme="blue"
         onClick={() => setShowDocInput(true)}
-        className="px-4 py-2 rounded"
+        className="px-4 py-2 rounded bg-purple-900 hover:bg-purple-950 hover:scale-105 transition-all duration-200"
       >
         Generate Doc String
       </Button>
@@ -95,7 +95,7 @@ export default function GenerateDoc() {
       {showDocInput && (
         <Box className="mt-4 space-y-2">
           <textarea
-            className="w-full p-2 border border-gray-300 rounded"
+            className="w-full h-72 p-2 border border-gray-300 rounded"
             rows={4}
             placeholder="Paste the function you want to document here..."
             value={functionText}
@@ -104,11 +104,12 @@ export default function GenerateDoc() {
           <HStack spacing={2}>
             <Button
               colorScheme="green"
+              className="bg-blue-950 hover:bg-blue-900 p-2"
               onClick={handleDocSubmit}
               isLoading={isGeneratingDoc}
               isDisabled={isGeneratingDoc || !functionText.trim()}
             >
-              {isGeneratingDoc ? 'Generating...' : 'Submit'}
+              {isGeneratingDoc ? 'Generating...' : 'Generate'}
             </Button>
             <Button
               colorScheme="gray"
@@ -123,55 +124,58 @@ export default function GenerateDoc() {
         </Box>
       )}
 
-      {generatedDoc && (
-        <Box
-          mt={4}
-          p={4}
-          borderRadius="md"
-          bg="black"
-          color="white"
-          border="1px"
-          borderColor="gray.200"
+{generatedDoc && (
+  <Box
+    mt={4}
+    p={4}
+    borderRadius="md"
+    bg="black"
+    color="white"
+    border="1px"
+    borderColor="gray.200"
+  >
+    <HStack justify="space-between" mb={2}>
+      <Text fontSize="sm" fontWeight="medium" color="gray.600">
+        Generated Documentation:
+      </Text>
+      <HStack spacing={2}>
+        <Button
+          size="sm"
+          variant="ghost"
+          onClick={() => {
+            setHasCopied(true);
+            navigator.clipboard.writeText(generatedDoc);
+          }}
         >
-          <HStack justify="space-between" mb={2}>
-            <Text fontSize="sm" fontWeight="medium" color="gray.600">
-              Generated Documentation:
-            </Text>
-            <HStack spacing={2}>
-              <Button
-                size="sm"
-                colorScheme="green"
-                onClick={handleApplyDoc}
-              >
-                Apply to Editor
-              </Button>
-              <Button
-                size="sm"
-                variant="ghost"
-                onClick={onCopy}
-                leftIcon={hasCopied ? <Check size={16} /> : <Copy size={16} />}
-              >
-                {hasCopied ? 'Copied!' : 'Copy'}
-              </Button>
-            </HStack>
-          </HStack>
-          <Box
-            as="pre"
-            p={3}
-            borderRadius="md"
-            bg="black"
-            color="white"
-            fontSize="sm"
-            fontFamily="monospace"
-            whiteSpace="pre-wrap"
-            wordBreak="break-word"
-            maxH="300px"
-            overflowY="auto"
-          >
-            {generatedDoc}
-          </Box>
-        </Box>
-      )}
+          {hasCopied ? "Copied!" : "Copy"}
+        </Button>
+        <Button
+          size="sm"
+          variant="ghost"
+          onClick={() => setGeneratedDoc('')} // Or another function to close the box
+        >
+          X
+        </Button>
+      </HStack>
+    </HStack>
+    <Box
+      as="pre"
+      p={3}
+      borderRadius="md"
+      bg="black"
+      color="white"
+      fontSize="sm"
+      fontFamily="monospace"
+      whiteSpace="pre-wrap"
+      wordBreak="break-word"
+      maxH="300px"
+      overflowY="auto"
+    >
+      {generatedDoc}
+    </Box>
+  </Box>
+)}
+
     </Box>
   );
 }

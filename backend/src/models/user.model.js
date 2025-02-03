@@ -1,11 +1,43 @@
-import mongoose from 'mongoose';
+import mongoose,{Schema} from 'mongoose';
 import jwt from 'jsonwebtoken'
 import bcrypt from 'bcrypt'
 const userSchema = new mongoose.Schema({
 
-  username: { type: String, required: true, unique: true },
-  email: { type: String, required: true, unique: true },
-  password: { type: String, required: true },
+  username: {
+    type: String,
+    required: true,
+    unique: true,
+    trim: true,
+    minlength: 3
+  },
+  email: {
+    type: String,
+    required: true,
+    unique: true,
+    trim: true,
+    minlength: 3
+  },
+
+  password: {
+    type: String,
+    required: true,
+    minlength: 6
+  },
+  projects: [{
+    project: {
+      type: Schema.Types.ObjectId,
+      ref: 'Project'
+    },
+    role: {
+      type: String,
+      enum: ['admin', 'member'],
+      required: true
+    }
+  }],
+  createdAt: {
+    type: Date,
+    default: Date.now
+  }
 });
 
 userSchema.pre('save',async function(next){

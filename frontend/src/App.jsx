@@ -12,6 +12,7 @@ import { AuthProvider } from './context/AuthContext';
 import FileExplorer from './components/FileExplorer';
 import Login from './components/Login';
 import Signup from './components/Signup';
+import About from './components/About';
 import ProtectedRoute from './components/ProtectedRoute';
 
 
@@ -25,8 +26,9 @@ function App() {
       <Router>
           <Provider>
           <Navbar/>
-          <div className='h-[100px] bg-black'></div>
+          <div className='h-[70px] bg-blue-950'></div>
         <Routes>
+          <Route path="/about" element={<About />} />
           <Route path="/file" element={<FileExplorer />} />
           <Route path="/" element={<Home />} />
           <Route path="/create" element={<Edit />} />

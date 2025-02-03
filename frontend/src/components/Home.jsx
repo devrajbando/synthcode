@@ -5,6 +5,7 @@ import AnimatedContent from "./ui/AnimateContent";
 // import tree from "../assets/undraw_quiet-street_v45k.svg";
 import {useNavigate} from "react-router-dom"
 import SpotlightCard from './ui/SpotlightCard';
+import ShinyText from "./ui/ShinyText";
 
 export default function Home() {
   const [isHovered, setIsHovered] = useState(false);
@@ -107,6 +108,10 @@ export default function Home() {
                 />
             </SpotlightCard>
             </div>
+            <ShinyText text="About Us" className="border p-2 rounded-2xl my-5 w-[25vh] text-center text-4xl border-cyan-400 mx-[90vh] hover:bg-blue-800 hover:cursor-pointer"
+            onClick={() => navigate("/about")} 
+            > 
+            </ShinyText>
             </div>
         </section>
 
@@ -116,7 +121,7 @@ export default function Home() {
      
 
       {/* Analyze Section */}
-      <div className="relative min-h-screen bg-green-800 py-10">
+      <div className="relative min-h-screen bg-blue-900 py-10">
         <AnimatedContent
           distance={100}
           direction="vertical"
@@ -130,7 +135,7 @@ export default function Home() {
 
           <div className="text-right mx-auto mr-[180px] mt-[150px]">
            <img src="../assets/coding.png" alt="" />
-            <h2 className="text-6xl font-semibold text-white">Analyze Urban Diversity</h2>
+            <h2 className="text-6xl font-semibold text-white">Create Now</h2>
             <p className="text-2xl text-white mt-20 mb-8">We leverage advanced AI algorithms to analyze urban environments and biodiversity patterns.<br/> Our platform examines data from various sources, such as satellite imagery, city infrastructure, <br/> and ecosystem reports, to provide comprehensive insights.</p>
             <button className="btn btn-outline btn-light">Analyze Now</button>
           </div>

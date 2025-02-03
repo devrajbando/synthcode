@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
 import { Link } from 'react-router-dom';
 import { Mail, Lock, User, AlertCircle } from 'lucide-react';
+import AnimatedContent from "./ui/AnimateContent";
 const Signup = () => {
   const navigate = useNavigate();
   const [page, setPage] = useState(1);
@@ -71,12 +72,23 @@ const Signup = () => {
 
 
   return (
-    <div className="min-h-screen flex items-center justify-centerbg-gray-900 py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-md w-full space-y-8 bg-white p-8 rounded-lg shadow-md">
+       <AnimatedContent
+          distance={80}
+          direction="horizontal"
+          reverse={false}
+          config={{ tension: 50, friction: 25 }}
+          initialOpacity={0.2}
+          animateOpacity
+          scale={1.2}
+          threshold={0.2}
+        >
+    <div className="min-h-screen flex items-center justify-center bg-blue-950 py-12 px-4 sm:px-6 lg:px-8">
+          
+      <div className="max-w-md w-full space-y-8 bg-gray-900 p-8 rounded-lg shadow-md">
         {/* Header */}
         <div className="text-center">
-          <h2 className="text-3xl font-bold text-gray-900">Create an account</h2>
-          <p className="mt-2 text-sm text-gray-600">
+          <h2 className="text-3xl font-bold text-white-900">Create an account</h2>
+          <p className="mt-2 text-sm text-gray-400">
             Already have an account?{' '}
             <Link to="/login" className="font-medium text-blue-600 hover:text-blue-500">
               Sign in
@@ -99,7 +111,7 @@ const Signup = () => {
           <div className="space-y-4">
             {/* Email Input */}
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+              <label htmlFor="email" className="block text-sm font-medium text-gray-100">
                 Email address
               </label>
               <div className="mt-1 relative">
@@ -114,13 +126,13 @@ const Signup = () => {
                   onChange={(e) => setEmail(e.target.value)}
                   className="appearance-none block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
                   placeholder="Enter your email"
-                />
+                  />
               </div>
             </div>
 
             {/* Username Input */}
             <div>
-              <label htmlFor="username" className="block text-sm font-medium text-gray-700">
+              <label htmlFor="username" className="block text-sm font-medium text-gray-100">
                 Username
               </label>
               <div className="mt-1 relative">
@@ -135,13 +147,13 @@ const Signup = () => {
                   onChange={(e) => setUsername(e.target.value)}
                   className="appearance-none block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
                   placeholder="Choose a username"
-                />
+                  />
               </div>
             </div>
 
             {/* Password Input */}
             <div>
-              <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+              <label htmlFor="password" className="block text-sm font-medium text-gray-100">
                 Password
               </label>
               <div className="mt-1 relative">
@@ -156,13 +168,13 @@ const Signup = () => {
                   onChange={(e) => setPassword(e.target.value)}
                   className="appearance-none block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
                   placeholder="Create a password"
-                />
+                  />
               </div>
             </div>
 
             {/* Confirm Password Input */}
             <div>
-              <label htmlFor="confirm-password" className="block text-sm font-medium text-gray-700">
+              <label htmlFor="confirm-password" className="block text-sm font-medium text-gray-100">
                 Confirm Password
               </label>
               <div className="mt-1 relative">
@@ -177,7 +189,7 @@ const Signup = () => {
                   onChange={(e) => setConfirm(e.target.value)}
                   className="appearance-none block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
                   placeholder="Confirm your password"
-                />
+                  />
               </div>
             </div>
           </div>
@@ -186,7 +198,7 @@ const Signup = () => {
           <button
             type="submit"
             className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200"
-          >
+            >
             Create account
           </button>
 
@@ -194,6 +206,7 @@ const Signup = () => {
         </form>
       </div>
     </div>
+            </AnimatedContent>
   );
 };
 
