@@ -118,25 +118,20 @@ async def autocomplete(request: autoCompleteRequest):
     
 class fixSyntaxRequest(BaseModel):
     codeSnippet : str
-    errorMessage : str
-    language : str
+    # errorMessage : str
+    # language : str
     maxLen : int = 200
 
 @app.post("/fixsyntax")
 
 async def fixsyntax(request: fixSyntaxRequest):
     try:
-
-        extractedError = extract_error(request.errorMessage, request.language)
-
         prompt = f"""
-        You are an AI code assistant. The following code is given to you along with the error. Return the corrected code.
+        You are an AI code assistant. Given the following code snippet, identify the mistake and provide a corrected version.
 
         Code:
         {request.codeSnippet}
 
-        Error:
-        {extractedError}
         
 
         Fix the error and return only the corrected code.
@@ -165,7 +160,7 @@ async def fixsyntax(request: fixSyntaxRequest):
     
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
-
+    
 class docStringRequest(BaseModel):
     codeSnippet: str
     maxLen: int = 200

@@ -1,13 +1,22 @@
 import React, { useState } from 'react';
 import AnimatedContent from './ui/AnimateContent';
-import { FolderPlus, FilePlus, FolderOpen } from 'lucide-react';
+import { FolderPlus, FilePlus, FolderOpen,X } from 'lucide-react';
 import { useNavigate } from "react-router-dom";
+import {
+  DialogRoot,
+  DialogBody,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from './ui/dialog';
 
 function Create() {
   const navigate = useNavigate();
   const [isNewProjectModalOpen, setIsNewProjectModalOpen] = useState(false);
   const [newProjectName, setNewProjectName] = useState('');
   const [projectId,setprojectId]=useState("")
+  const [isJoinOpen, setIsJoinOpen] = useState(false);
+  const [projectCode, setProjectCode] = useState('');
   const projects = [
     {
       id: 1,
@@ -51,8 +60,8 @@ function Create() {
           }),
         });
         const data = await response.json();
-        console.log(data)
-        setprojectId(data.data._id)
+        console.log(data.data.project._id)
+        setprojectId(data.data.project._id)
         if (data.status === 409) {
           
           console.log(data.error)
@@ -61,6 +70,7 @@ function Create() {
           
           window.alert(data.message)
             // navigate('/new-project');
+            navigate('/new-project', { state: { projectId: data.data.project._id } });
           }
         
         
@@ -73,14 +83,55 @@ function Create() {
       }
     }
       // Navigate to new project route with project name
-      navigate('/new-project', { state: { projectId: projectId } });
       
       // Reset modal state
       setNewProjectName('');
       setIsNewProjectModalOpen(false);
     }
   };
+  const handleJoin =async () => {
+    if (projectCode.trim()) {
+      try {
+        const response = await fetch('http://localhost:8000/api/project/join', {
+          method: 'POST',
+          credentials:"include",
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          
+          body: JSON.stringify({
+            projectCode
+          }),
+        });
+        const data = await response.json();
+        console.log(data)
+        
+        if (data.status === 409) {
+          
+          console.log(data.error)
+        }
+        else if (response.status === 201) {
+         
+          window.alert(data.message)
+            // navigate('/new-project');
+            navigate(`/new-project`, { state: { projectId: data.data._id } });
+          }
+        
+        
+       
+    } catch (error) {
+      if (error.response && error.response.data) {
+        console.log(error.response.data.message || 'Something went wrong. Please try again.');
+      } else {
+        console.log('Something went wrong. Please try again.');
+      }
+    }
+      setIsJoinOpen(false);
+      setProjectCode('');
+    }
+  };
 
+  
   return (
     <>
       <div className="relative h-screen bg-blue-900 opacity-70">
@@ -118,7 +169,7 @@ function Create() {
 
               <button 
                 className="flex items-center gap-2 border-2 bg-white border-blue-950 text-blue-950 hover:bg-gray-300 px-4 py-2 rounded-lg transition-colors duration-200 shadow-md"
-                onClick={() => console.log('Create Project clicked')}
+                onClick={() => setIsJoinOpen(true)}
               >
                 <FolderPlus className="w-5 h-5" />
                 <span className="font-medium">Join Project</span>
@@ -166,7 +217,7 @@ function Create() {
       {/* New Project Modal */}
       {isNewProjectModalOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg p-6 w-full max-w-md">
+          <div className="bg-blue-950 rounded-lg p-6 w-full max-w-md">
             <h2 className="text-xl font-semibold mb-4">Create New Project</h2>
             <input 
               type="text"
@@ -178,7 +229,7 @@ function Create() {
             <div className="flex justify-end gap-4">
               <button 
                 onClick={() => setIsNewProjectModalOpen(false)}
-                className="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-lg"
+                className="px-4 py-2 text-gray-100 hover:bg-gray-900 rounded-lg"
               >
                 Cancel
               </button>
@@ -187,6 +238,42 @@ function Create() {
                 className="px-4 py-2 bg-blue-950 text-white rounded-lg hover:bg-blue-900"
               >
                 Create Project
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+{isJoinOpen && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-blue-950 rounded-lg p-6 w-full max-w-md">
+            <h2 className="text-xl font-semibold mb-4 text-white">Join Project</h2>
+            <input 
+              type="text"
+              placeholder="Enter project code"
+              value={projectCode}
+              onChange={(e) => setProjectCode(e.target.value)}
+              className="w-full p-2 border rounded-lg mb-4 bg-black text-gray-100"
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') handleJoin();
+              }}
+            />
+            <div className="flex justify-end gap-4">
+              <button 
+                onClick={() => {
+                  setIsJoinOpen(false);
+                  setProjectCode('');
+                }}
+                className="px-4 py-2 text-gray-100 hover:bg-gray-900 rounded-lg"
+              >
+                Cancel
+              </button>
+              <button 
+                onClick={handleJoin}
+                className="px-4 py-2 bg-white text-blue-950 rounded-lg hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed"
+                disabled={!projectCode.trim()}
+              >
+                Join Project
               </button>
             </div>
           </div>

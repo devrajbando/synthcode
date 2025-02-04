@@ -71,6 +71,10 @@ io.on('connection', (socket) => {
     socket.broadcast.emit("cursor-update", { userId, position });
   });
 
+  // socket.on("create-room",createProjectRoom)
+  // socket.on("join-room",joinProjectRoom)
+
+
   socket.on("disconnect", () => {
     console.log(`User Disconnected: ${socket.id}`);
   });   

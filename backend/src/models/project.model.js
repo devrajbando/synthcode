@@ -13,13 +13,20 @@ const ProjectSchema = new mongoose.Schema({
       trim: true
     },
     admin: {
+      type: String,
+      required: true
+    },
+    adminId: {
       type: Schema.Types.ObjectId,
       ref: 'User',
       required: true
     },
-    members: [{
+    membersId: [{
       type: Schema.Types.ObjectId,
       ref: 'User'
+    }],
+    members: [{
+      type:String
     }],
     joiningCode: {
       type: String,

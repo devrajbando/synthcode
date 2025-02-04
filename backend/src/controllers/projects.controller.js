@@ -6,16 +6,20 @@ import bcrypt from 'bcrypt'
 import { ApiResponse } from "../utils/ApiResponse.js";
 
 const createNewProject=asyncHandler(async(req,res)=>{
-const projectName=req.body.newProjectName
-const code = Math.random().toString(36).slice(2, 14); // Generates 12 random letters
-console.log(code);
+    const projectName=req.body.newProjectName
+
+    const code = Math.random().toString(36).slice(2, 14); // Generates 12 random letters
+    console.log(code);
 
     const project=await Project.create({
         name:projectName,
-        admin:req.user._id,
+        adminId:req.user._id,
+        admin:req.user.username,
+        membersId:[req.user._id],
+        members:[req.user.username],
         joiningCode:code,
     })
-    const projectId=project._id
+    
 
     if(!project){
         throw new ApiError(500 ,"something went wrong on our side")
@@ -38,7 +42,9 @@ console.log(code);
 
 const getData=asyncHandler(async(req,res)=>{
     try {
-        const project = await Project.findById(req.params.projectId)
+        const { projectId } = req.params;
+        console.log(projectId)
+        const project = await Project.findById(projectId)
             
         if (!project) {
             throw new ApiError(404, "Project not found");
@@ -53,4 +59,40 @@ const getData=asyncHandler(async(req,res)=>{
         throw new ApiError(404, "Failed to retrieve project details");
     }
 })
-export {createNewProject,getData}
+
+const joinProject=asyncHandler(async(req,res)=>{
+    const joiningCode=req.body.projectCode
+    console.log(joiningCode)
+    const project=await Project.findOne({
+        joiningCode
+    })
+
+    if(!project)
+        return res.status(409)
+                .json({
+
+                    
+                    status: 409,
+                    message: "Project does not exist",
+                }
+                )
+                
+            
+
+    const currentUser=req.user._id;
+    const currentUserName=req.user.username;
+                console.log(currentUserName)
+    await Project.findByIdAndUpdate(project._id,
+        {
+            $addToSet: { membersId: currentUser,
+                members: currentUserName
+             }
+        },
+        {new:true} 
+    )
+    return res.status(201).json(
+    new ApiResponse(201,project,"Project found Successfully")
+    )
+
+})
+export {createNewProject,getData,joinProject}

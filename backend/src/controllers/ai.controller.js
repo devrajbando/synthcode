@@ -41,12 +41,14 @@ export const fixSyntax= asyncHandler(async(req,res)=>{
     try {
         const codeSnippet=req.body.code
         const errorMessage=req.body.errorMessage
+        const language=req.body.language
         // console.log(functionText)
         console.log(codeSnippet)
         console.log("ERRRROORRRR IS ",errorMessage)
         const fn = {
             codeSnippet: codeSnippet, // The function text from the frontend
             // errorMessage: errorMessage, // The error
+            // language: language,
             maxLen: 4096,               // Set your desired maxLen value here
           };
         const response = await fetch('http://127.0.0.1:5020/fixsyntax', {

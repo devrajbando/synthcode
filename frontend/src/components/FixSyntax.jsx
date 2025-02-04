@@ -16,7 +16,8 @@ export default function FixSyntax({ editorRef, language, output }) {
         },
         body: JSON.stringify({ 
           code,
-          errorMessage // Use the correct parameter name
+          errorMessage,
+          language // Use the correct parameter name
         }),
       });
 

@@ -80,12 +80,12 @@ const registerUser=asyncHandler(async(req,res)=>{
             console.log(existedUser)
 
             const newPassword = await bcrypt.hash(password, 10)
-    
+            console.log(newPassword)
+            console.log(password,"while signing up")
             const user=await User.create({
                 username:req.body.username.toLowerCase(),
                 email:req.body.email,
                 password:newPassword,
-                              
             })
     
             const createdUser=await User.findById(user._id).select(
@@ -117,7 +117,7 @@ const LoginUser=asyncHandler(async(req,res)=>{
 
     const user=await User.findOne({email})
     
-    
+    console.log(user)
     if(!user)
         throw new ApiError(404,"user does  not exist")
 
