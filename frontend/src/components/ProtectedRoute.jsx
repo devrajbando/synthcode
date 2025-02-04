@@ -6,7 +6,7 @@ import { useAuthContext } from '../hooks/useAuthContext'
 const ProtectedRoute = ({ children }) => {
   const { user,loading } = useAuthContext();
   if (loading) {
-    return <div className='text-white m-50'>Loading...</div>; // ✅ Show a loading indicator instead of redirecting
+    return <div className='text-white m-50'>Loading...</div>; 
   }
   if (!user) {
     // Redirect to login if the user is not authenticated

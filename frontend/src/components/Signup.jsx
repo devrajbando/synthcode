@@ -68,10 +68,7 @@ const Signup = () => {
     
   }
 
-  
-
-
-  return (
+   return (
        <AnimatedContent
           distance={80}
           direction="horizontal"

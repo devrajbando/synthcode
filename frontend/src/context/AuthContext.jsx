@@ -6,9 +6,7 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const verifyJwtToken=async()=>
-  {
-
-      
+  {   
           try {
               
               const response = await fetch('http://localhost:8000/api/users/verify', {
@@ -28,13 +26,13 @@ export const AuthProvider = ({ children }) => {
             
           }
           finally {
-            setLoading(false); // ✅ Ensure loading stops after fetch completes
+            setLoading(false); 
           }
       }
   useEffect(() => {
 
         verifyJwtToken();
-//   }
+
   }, []);
 
   

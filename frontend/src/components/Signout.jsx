@@ -42,8 +42,7 @@ const SignOut = () => {
 
         if (data.statusCode == 200) {
             console.log('Logout successful');
-            // setIsAuthenticated(false);
-            // dispatch({ type: 'LOGOUT' })
+            
             setUser(null)
             alert('Logout successful');
             navigate('/login');
