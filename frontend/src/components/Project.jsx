@@ -169,13 +169,13 @@ const [copyColour,setCopyColour]=useState("color-gray-100")
   const location = useLocation();
   const projectId = location.state?.projectId || "Default Id";
   console.log(projectId)
-  // const handleAddFolder = (parentPath) => {
-  //   const newFolderName = prompt("Enter folder name:");
-  //   if (newFolderName) {
-  //     // Logic to add folder (simplified)
-  //     console.log(`Adding folder ${newFolderName} to ${parentPath}`);
-  //   }
-  // };
+  const handleAddFolder = (parentPath) => {
+    const newFolderName = prompt("Enter folder name:");
+    if (newFolderName) {
+      // Logic to add folder (simplified)
+      console.log(`Adding folder ${newFolderName} to ${parentPath}`);
+    }
+  };
 
   useEffect(() => {
   const getProjectData=async()=>{
@@ -220,23 +220,23 @@ const [copyColour,setCopyColour]=useState("color-gray-100")
   }
   getProjectData()
 }, [projectId]);
-  // const handleAddFile = (parentPath) => {
-  //   const newFileName = prompt("Enter file name:");
-  //   if (newFileName) {
-  //     // Logic to add file (simplified)
-  //     console.log(`Adding file ${newFileName} to ${parentPath}`);
-  //   }
-  // };
+  const handleAddFile = (parentPath) => {
+    const newFileName = prompt("Enter file name:");
+    if (newFileName) {
+      // Logic to add file (simplified)
+      console.log(`Adding file ${newFileName} to ${parentPath}`);
+    }
+  };
 
-  // const handleRename = (path, newName) => {
-  //   // Logic to rename item (simplified)
-  //   console.log(`Renaming ${path} to ${newName}`);
-  // };
+  const handleRename = (path, newName) => {
+    // Logic to rename item (simplified)
+    console.log(`Renaming ${path} to ${newName}`);
+  };
 
-  // const handleDelete = (path) => {
-  //   // Logic to delete item (simplified)
-  //   console.log(`Deleting ${path}`);
-  // };
+  const handleDelete = (path) => {
+    // Logic to delete item (simplified)
+    console.log(`Deleting ${path}`);
+  };
 
   const copyProjectCode = () => {
     navigator.clipboard.writeText(projectDetails.joiningCode);

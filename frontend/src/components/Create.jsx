@@ -70,7 +70,7 @@ function Create() {
           
           window.alert(data.message)
             // navigate('/new-project');
-            navigate('/new-project', { state: { projectId: data.data.project._id } });
+            navigate('/project', { state: { projectId: data.data.project._id } });
           }
         
         
@@ -114,7 +114,7 @@ function Create() {
          
           window.alert(data.message)
             // navigate('/new-project');
-            navigate(`/new-project`, { state: { projectId: data.data._id } });
+            navigate(`/project`, { state: { projectId: data.data._id } });
           }
         
         

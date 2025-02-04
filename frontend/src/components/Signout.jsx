@@ -6,7 +6,7 @@ const SignOut = () => {
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
   const [error, setError] = useState('');
-  const { dispatch } = useAuthContext()
+  const { setUser } = useAuthContext()
 
 
   const handleSubmit = async(e) => {
@@ -43,7 +43,8 @@ const SignOut = () => {
         if (data.statusCode == 200) {
             console.log('Logout successful');
             // setIsAuthenticated(false);
-            dispatch({ type: 'LOGOUT' })
+            // dispatch({ type: 'LOGOUT' })
+            setUser(null)
             alert('Logout successful');
             navigate('/login');
         } else {

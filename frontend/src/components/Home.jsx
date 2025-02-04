@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import AnimatedContent from "./ui/AnimateContent";
+import { useAuthContext } from '../hooks/useAuthContext'
 // import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet'; // Install react-leaflet for map support
 // import 'leaflet/dist/leaflet.css'; // Leaflet styles
 // import tree from "../assets/undraw_quiet-street_v45k.svg";
@@ -8,6 +9,7 @@ import SpotlightCard from './ui/SpotlightCard';
 import ShinyText from "./ui/ShinyText";
 
 export default function Home() {
+  const { user } = useAuthContext()
   const [isHovered, setIsHovered] = useState(false);
   const navigate = useNavigate();
   const FeatureCard = ({ title, description }) => (
@@ -41,12 +43,12 @@ export default function Home() {
               AI Powered Code Collaborator
             </h1>
             <h2 className="text-2xl font-normal w-3/4 text-left py-5 text-white">
-            Experience real-time code collaboration powered by advanced AI
+            Experience real-time code collaboration powered by advanced AI. <br /> Elevate your coding experience—faster, smarter, and more efficient!
             </h2>
             <button
               type="button"
               className="bg-white text-left w-48 rounded-2xl h-14 relative font-sans text-black text-xl font-medium group my-4"
-              onClick={()=>navigate("/login")}
+              onClick={()=>navigate("/code")}
             >
               <div className="bg-blue-700 rounded-xl h-12 w-1/4 flex items-center justify-center absolute right-1 top-[4px] group-hover:w-[184px] z-10 duration-500">
                 <svg
@@ -122,6 +124,12 @@ export default function Home() {
 
       {/* Analyze Section */}
       <div className="relative min-h-screen bg-blue-900 py-10">
+      {/* <div
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-10"
+          style={{
+            backgroundImage: `url('https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8Y29sbGFib3JhdGV8ZW58MHx8MHx8fDA%3D')`,
+          }}
+        /> */}
         <AnimatedContent
           distance={100}
           direction="vertical"
@@ -134,12 +142,12 @@ export default function Home() {
         >
 
           <div className="text-right mx-auto mr-[180px] mt-[150px]">
-           <img src="../assets/coding.png" alt="" />
-            <h2 className="text-6xl font-semibold text-white">Create Now</h2>
-            <p className="text-2xl text-white mt-20 mb-8">We leverage advanced AI algorithms to analyze urban environments and biodiversity patterns.<br/> Our platform examines data from various sources, such as satellite imagery, city infrastructure, <br/> and ecosystem reports, to provide comprehensive insights.</p>
-            <button className="btn btn-outline btn-light"
-            onClick={()=>navigate('/project')}
-            >Analyze Now</button>
+           
+            <h2 className="text-6xl font-semibold text-white">Create Projects</h2>
+            <p className="text-2xl text-white mt-20 mb-8">Collaborate seamlessly with our AI-powered code collaboration platform! Create and join projects where you and your team can code together in real time, with AI-assisted suggestions, debugging, and seamless version control. </p>
+            <button className="btn btn-outline btn-light bg-blue-950 hover:bg-gray-900 p-4 rounded-3xl text-xl"
+            onClick={() => navigate(user ? '/create' : '/login')}
+            >Get Started</button>
           </div>
         </AnimatedContent>
       </div>

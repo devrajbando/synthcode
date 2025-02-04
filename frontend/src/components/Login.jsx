@@ -2,9 +2,10 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useContext } from 'react';
 import { AuthContext } from '../context/AuthContext';
+import { useAuthContext } from '../hooks/useAuthContext';
 import AnimatedContent from "./ui/AnimateContent";
 import { Link } from 'react-router-dom';
-import { useAuthContext } from '../hooks/useAuthContext';
+// import { useAuthContext } from '../hooks/useAuthContext';
 import { Mail, Lock, AlertCircle } from 'lucide-react';
 export default function Login() {
  
@@ -12,8 +13,8 @@ export default function Login() {
 	const navigate = useNavigate();
 	const [password, setPassword] = useState('')
     const [error, setError] = useState('');
-    const { dispatch } = useAuthContext()
-    
+    // const { dispatch } = useAuthContext()
+    const { setUser } = useAuthContext();
 
     async function LoginUser(event) {
         event.preventDefault();
@@ -38,13 +39,13 @@ export default function Login() {
             }
     
             const data = await response.json();
-            console.log(data);
+            console.log(data.data.user);
     
             if (data.statusCode == 200) {
                 console.log('Login successful');
                 // setIsAuthenticated(true);
-                dispatch({type: 'LOGIN', payload: data})
-
+                // dispatch({type: 'LOGIN', payload: data})
+                setUser(data.data.user)
                 alert('Login successful');
 
                 navigate('/');

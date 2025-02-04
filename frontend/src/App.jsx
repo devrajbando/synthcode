@@ -35,14 +35,14 @@ function App() {
           <Route path="/about" element={<About />} />
           <Route path="/file" element={<FileExplorer />} />
           <Route path="/" element={<Home />} />
-          <Route path="/create" element={<Edit />} />
-          <Route path="/new-project" element={<Project />} />
+          <Route path="/code" element={<Edit />} />
           <Route path="/login" element={<Login/>} />
           <Route path="/signup" element={<Signup/>} />
-          <Route path="/signout" element={<SignOut/>} />
-          <Route path="/project" element={<Create/>} />
-          <Route path="/profile" element={<Profile/>} />
           
+          <Route path="/project" element={<ProtectedRoute><Project /></ProtectedRoute>} />
+        <Route path="/signout" element={<ProtectedRoute><SignOut /></ProtectedRoute>} />
+        <Route path="/create" element={<ProtectedRoute><Create /></ProtectedRoute>} />
+        <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
         </Routes>
       <Footer/>
     </Provider>
@@ -50,7 +50,7 @@ function App() {
     </AuthProvider>
       
       
-      {/* <Edit/> */}
+      
     
     
     </>

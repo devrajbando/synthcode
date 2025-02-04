@@ -11,6 +11,9 @@ import {verifyJWT,validateToken} from '../middlewares/auth.middleware.js'
 const userRouter=Router()
 
 userRouter.route('/signup').post(registerUser)
+userRouter.route('/verify').get(verifyJWT, async (req, res) => {
+    res.json({ user: { id: req.user._id, email: req.user.email, name: req.user.name } });
+  })
 userRouter.route('/login').post(LoginUser)
 userRouter.route('/logout').post(verifyJWT,LogoutUser)
 userRouter.route('/change-pass').post(verifyJWT,ChangePassword)

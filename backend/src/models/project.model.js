@@ -34,7 +34,6 @@ const ProjectSchema = new mongoose.Schema({
       unique: true
     },
     rootFolder: {
-
       type: Schema.Types.ObjectId,
       ref: 'Folder'
     },
@@ -58,10 +57,6 @@ const ProjectSchema = new mongoose.Schema({
       next();
     }]
   });
-
-
-
-
 
 
   export const Project = mongoose.model('Project', ProjectSchema);
