@@ -15,7 +15,7 @@ const generateAccessAndRefreshToken=async(userId)=>
             const refreshToken=user.generateRefreshToken()
             user.refreshToken=refreshToken
             await user.save({validateBeforeSave:false})
-    
+            console.log("reached user.controller.js ",accessToken)
             return {accessToken,refreshToken}
         } catch (error) {
             console.log(error.message)
@@ -144,7 +144,7 @@ const LoginUser=asyncHandler(async(req,res)=>{
         httpOnly:true,//for local its false, later set true
         secure:true
     }
-
+    console.log("reached final point ",accessToken)
     return res   
     .status(200)
     .cookie("accessToken",accessToken,options)
