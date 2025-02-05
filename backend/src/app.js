@@ -40,7 +40,7 @@ const server = createServer(app);
 
 const io = new Server(3002, {
   cors: {
-    origin: ["http://localhost:5173"],
+    origin: ["https://synthcode.vercel.app"],
   },
 });
 
