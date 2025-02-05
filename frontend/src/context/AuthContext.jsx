@@ -9,7 +9,7 @@ export const AuthProvider = ({ children }) => {
   {   
           try {
               
-              const response = await fetch('http://localhost:8000/api/users/verify', {
+              const response = await fetch(`${API_URL}/api/users/verify`, {
                   method: 'GET',
                   credentials: 'include', // Include cookies in the request
               });
