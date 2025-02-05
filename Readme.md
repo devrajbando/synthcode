@@ -1,4 +1,4 @@
-# 🖥️ AI-Powered Real-Time Collaborative Code Editor
+# 🖥️ synthcode: An AI-Powered Real-Time Collaborative Code Editor
 
 ## 🚀 Overview
 Our **AI-powered real-time collaborative code editor** is designed to bring developers together in a seamless and intelligent coding environment. It allows users to create and join projects, collaborate in real-time, and leverage AI-driven features to enhance their coding experience.
@@ -28,7 +28,7 @@ Our **AI-powered real-time collaborative code editor** is designed to bring deve
 - **Backend:** Node.js, Express.js
 - **Database:** MongoDB
 - **Real-Time Collaboration:** WebSockets (Socket.io)
-- **AI Integration:** Flask API
+- **AI Integration:** Fast API
 - **Authentication:** Jsonwebtoken
 
 ## 📌 Getting Started
@@ -36,24 +36,6 @@ Our **AI-powered real-time collaborative code editor** is designed to bring deve
 - Node.js (v16+)
 - MongoDB
 - Python
-
-### Installation
-1. Clone the repository:
-   ```sh
-   git clone https://github.com/quacky20/synthcode
-   cd synthcode
-   ```
-2. Install dependencies:
-   ```sh
-   npm install
-   ```
-3. Configure environment variables:
-   - Create a `.env` file in the root directory.
-   - Add the necessary API keys and database credentials.
-4. Start the development server:
-   ```sh
-   npm run dev
-   ```
 
 ## 🤝 Contributing
 We welcome contributions! Feel free to open issues and submit pull requests.
