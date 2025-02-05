@@ -92,7 +92,7 @@ function Create() {
   const handleJoin =async () => {
     if (projectCode.trim()) {
       try {
-        const response = await fetch('http://localhost:8000/api/project/join', {
+        const response = await fetch(`${API_URL}/api/project/join`, {
           method: 'POST',
           credentials:"include",
           headers: {
