@@ -205,6 +205,7 @@ const [copyColour,setCopyColour]=useState("color-gray-100")
           name:data.data.project.name,
           admin:data.data.project.admin,
           joiningCode:data.data.project.joiningCode,
+          description:data.data.project.description,
           members:data.data.project.members
          })
 
@@ -258,6 +259,11 @@ const [copyColour,setCopyColour]=useState("color-gray-100")
               <Copy className={`w-4 h-4 mr-2 ${copyColour}`} />
               {projectDetails.joiningCode}
             </button>
+          </div>
+
+          <div className='mb-5'>
+            <h2 className='text-xl font-semibold'>Description: {projectDetails.description}</h2>
+            
           </div>
 
           <div className="mb-4">

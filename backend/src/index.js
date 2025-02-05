@@ -8,7 +8,7 @@ import connectDB from './db/index.js'
 
     const port = process.env.PORT || 8000;
     
-    console.log('hello')
+    // console.log('hello')
     
     connectDB()
     .then(()=>{

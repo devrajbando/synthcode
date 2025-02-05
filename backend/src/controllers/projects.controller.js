@@ -7,6 +7,7 @@ import { ApiResponse } from "../utils/ApiResponse.js";
 
 const createNewProject=asyncHandler(async(req,res)=>{
     const projectName=req.body.newProjectName
+    const projectDesc=req.body.newProjectDesc
 
     const code = Math.random().toString(36).slice(2, 14); // Generates 12 random letters
     console.log(code);
@@ -15,14 +16,27 @@ const createNewProject=asyncHandler(async(req,res)=>{
         name:projectName,
         adminId:req.user._id,
         admin:req.user.username,
+        description:projectDesc,
         membersId:[req.user._id],
         members:[req.user.username],
         joiningCode:code,
     })
     
-
+    await User.findByIdAndUpdate(req.user._id,
+        {
+            $addToSet: { 
+                projects: {
+                    project:project._id,
+                    role:"admin",
+                    name:project.name,
+                    description:projectDesc,
+                }
+             }
+        },
+        {new:true} 
+    )
     if(!project){
-        throw new ApiError(500 ,"something went wrong on our side")
+        throw new ApiError(500 ,"something went wrong on our side")   
     }
 
     
@@ -62,6 +76,7 @@ const getData=asyncHandler(async(req,res)=>{
 
 const joinProject=asyncHandler(async(req,res)=>{
     const joiningCode=req.body.projectCode
+
     console.log(joiningCode)
     const project=await Project.findOne({
         joiningCode
@@ -86,6 +101,19 @@ const joinProject=asyncHandler(async(req,res)=>{
         {
             $addToSet: { membersId: currentUser,
                 members: currentUserName
+             }
+        },
+        {new:true} 
+    )
+    await User.findByIdAndUpdate(req.user._id,
+        {
+            $addToSet: { 
+                projects: {
+                    project:project._id,
+                    role:"member",
+                    name:project.name,
+                    description:project.description,
+                }
              }
         },
         {new:true} 

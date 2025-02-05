@@ -10,10 +10,14 @@ import {
   DialogFooter,
 } from './ui/dialog';
 import RotatingText from './ui/RotatingText'
+import { useAuthContext } from '../hooks/useAuthContext';
 function Create() {
   const navigate = useNavigate();
+  const {user}= useAuthContext()
+  console.log(user)
   const [isNewProjectModalOpen, setIsNewProjectModalOpen] = useState(false);
   const [newProjectName, setNewProjectName] = useState('');
+  const [newProjectDesc, setNewProjectDesc] = useState('');
   const [projectId,setprojectId]=useState("")
   const [isJoinOpen, setIsJoinOpen] = useState(false);
   const [projectCode, setProjectCode] = useState('');
@@ -56,7 +60,7 @@ function Create() {
           },
           
           body: JSON.stringify({
-            newProjectName
+            newProjectName,newProjectDesc
           }),
         });
         const data = await response.json();
@@ -131,6 +135,10 @@ function Create() {
     }
   };
 
+  const goToProject=async(id)=>{
+    navigate('/project', { state: { projectId: id } });
+  }
+
   
   return (
     <>
@@ -153,9 +161,10 @@ function Create() {
         >
           <div className="mx-auto px-[180px] flex flex-col">
 
+            <h1 className="text-6xl text-white text-left mt-[140px] py-10">
           <RotatingText
   texts={['Code', 'Create', 'Collaborate']}
-  mainClassName="px-2 sm:px-2 md:px-3 bg-cyan-300 text-black overflow-hidden py-0.5 sm:py-1 md:py-2 justify-center rounded-lg"
+  mainClassName="px-2 sm:px-2 md:px-3 text-white overflow-hidden py-0.5 sm:py-1 md:py-2 justify-start rounded-lg"
   staggerFrom={"last"}
   initial={{ y: "100%" }}
   animate={{ y: 0 }}
@@ -165,9 +174,8 @@ function Create() {
   transition={{ type: "spring", damping: 30, stiffness: 400 }}
   rotationInterval={2000}
 />
-            {/* <h1 className="text-6xl text-white text-left mt-[140px] py-10">
-              Code, Create, Collaborate
-            </h1> */}
+              {/* Code, Create, Collaborate */}
+            </h1>
             <h2 className="text-2xl font-normal w-3/4 text-left py-5 text-white">
               Make exciting coding projects with your friends
             </h2>
@@ -197,25 +205,25 @@ function Create() {
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {projects.map((project) => (
+                {user.projects && user.projects.map((project) => (
                   <div 
-                    key={project.id}
+                    key={project._id}
                     className="bg-blue-950 rounded-lg shadow-md border border-gray-200 hover:shadow-lg transition-shadow duration-200"
                   >
                     <div className="p-6">
                       <div className="flex items-center justify-between mb-4">
-                        <div className="flex items-center gap-3">
-                          <FolderOpen className="w-5 h-5 text-gray-200" />
+                        <button className="flex items-center gap-3" onClick={()=>goToProject(project.project)}>
+                          <FolderOpen  className="w-5 h-5 text-gray-200" />
                           <h3 className="font-semibold text-lg text-gray-100">{project.name}</h3>
-                        </div>
+                        </button>
                       </div>
 
                       <p className="text-white mb-4 line-clamp-2">{project.description}</p>
 
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-2">
-                          <div className={`w-3 h-3 rounded-full ${project.color}`}></div>
-                          <span className="text-sm text-white">{project.language}</span>
+                          {/* <div className={`w-3 h-3 rounded-full ${project.color}`}></div> */}
+                          {/* <span className="text-sm text-white">{project.language}</span> */}
                         </div>
                       </div>
                     </div>
@@ -237,6 +245,14 @@ function Create() {
               placeholder="Enter project name"
               value={newProjectName}
               onChange={(e) => setNewProjectName(e.target.value)}
+              className="w-full p-2 border rounded-lg mb-4"
+            />
+            <br />
+            <input 
+              type="text"
+              placeholder="Enter project description"
+              value={newProjectDesc}
+              onChange={(e) => setNewProjectDesc(e.target.value)}
               className="w-full p-2 border rounded-lg mb-4"
             />
             <div className="flex justify-end gap-4">

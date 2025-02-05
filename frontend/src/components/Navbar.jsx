@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import {useNavigate} from "react-router-dom"
-import { Home, Users, Mail, Code, Menu, X, LogIn,User, LogOut, Settings,Workflow } from 'lucide-react';
+import { Home, Users, Mail, Code, Menu, X, LogIn,User, LogOut, Settings,Workflow, DiamondPlus } from 'lucide-react';
 import { useAuthContext } from '../hooks/useAuthContext'
 const NavLink = ({ href, icon, text }) => (
   <a
@@ -67,7 +67,7 @@ const Navbar = () => {
             <NavLink href="/about" icon={<Users className="w-4 h-4" />} text="About Us" />
             
             <NavLink href="/code" icon={<Code className="w-4 h-4" />} text="Code" />
-{user && <NavLink href="/create" icon={<Workflow className="w-4 h-4" />} text="Create" />}
+{user && <NavLink href="/create" icon={<DiamondPlus className="w-4 h-4" />} text="Create" />}
             {!user &&
 
             <AuthButtons />

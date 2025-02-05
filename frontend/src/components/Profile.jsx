@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { User, Mail, Lock, EyeOff, Eye } from 'lucide-react';
+import { User, Mail, Lock, EyeOff, Eye, FolderOpen } from 'lucide-react';
 import {useNavigate} from "react-router-dom"
+import { useAuthContext } from '../hooks/useAuthContext';
 const Profile = () => {
   const [isPasswordModalOpen, setIsPasswordModalOpen] = useState(false);
   const [passwordFormData, setPasswordFormData] = useState({
@@ -31,46 +32,9 @@ const [username,setUsername]=useState("")
       [name]: value
     }));
   };
+  const {user}=useAuthContext()
   const API_URL = import.meta.env.VITE_API_URL;
-  const getCurrentUser= async()=>{
-    try {
-        const response = await fetch(`${API_URL}/api/users/current-user`, {
-            method: 'POST',
-            credentials: 'include', // Include cookies in the request
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                oldPassword:passwordFormData.oldPassword,
-                newPassword:passwordFormData.newPassword
-            }),
-        });
 
-        if (!response.ok) {
-           
-            setPasswordError('Couldnt get current user');
-            return;
-        }
-
-        const data = await response.json();
-        console.log(data);
-        setEmail(data.data.email)
-        setUsername(data.data.username)
-        if (data.statusCode == 200) {
-            console.log('Got Current user successful');
-            // setIsAuthenticated(false);
-            
-            // alert('Password Changed successful');
-            // navigate('/profile');
-        } else {
-            setPasswordError('Please check your username and password');
-        }
-    } catch (error) {
-        console.error('Error during logout:', error);
-        setPasswordError('An error occurred. Please try again.');
-    }
-  }
-getCurrentUser()
   const togglePasswordVisibility = (field) => {
     setPasswordVisibility(prev => ({
       ...prev,
@@ -148,10 +112,10 @@ getCurrentUser()
           <User className="w-8 h-8" />
         </div>
         <div>
-          <h2 className="text-xl font-semibold text-gray-100">{username}</h2>
+          <h2 className="text-xl font-semibold text-gray-100">{user.username}</h2>
           <p className="text-gray-600 flex items-center">
             <Mail className="w-4 h-4 mr-2 text-gray-400" />
-            {email}
+            {user.email}
           </p>
         </div>
       </div>
@@ -272,6 +236,40 @@ getCurrentUser()
         </div>
       )}
     </div>
+
+    <div className="p-6">
+              <div className="mb-6 text-center">
+                <h2 className="text-2xl font-bold text-gray-100">Your Projects</h2>
+                <p className="text-gray-100">Recent projects you've been working on</p>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {user.projects && user.projects.map((project) => (
+                  <div 
+                    key={project._id}
+                    className="bg-blue-950 rounded-lg shadow-md border border-gray-200 hover:shadow-lg transition-shadow duration-200"
+                  >
+                    <div className="p-6">
+                      <div className="flex items-center justify-between mb-4">
+                        <div className="flex items-center gap-3">
+                          <FolderOpen className="w-5 h-5 text-gray-200" />
+                          <h3 className="font-semibold text-lg text-gray-100">{project.name}</h3>
+                        </div>
+                      </div>
+
+                      <p className="text-white mb-4 line-clamp-2">{project.description}</p>
+
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          {/* <div className={`w-3 h-3 rounded-full ${project.color}`}></div> */}
+                          {/* <span className="text-sm text-white">{project.language}</span> */}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
       </div>
   );
 };

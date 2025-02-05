@@ -34,6 +34,12 @@ const userSchema = new mongoose.Schema({
       enum: ['admin', 'member'],
       required: true
     },
+    name:{
+      type:String
+    },
+    description:{
+      type:String
+    }
   }],
   refreshToken:{
     type:String

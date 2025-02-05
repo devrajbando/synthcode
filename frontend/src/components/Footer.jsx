@@ -16,14 +16,15 @@ const Footer = () => (
             <li><a href="/" className="text-gray-400 hover:text-blue-400">Home</a></li>
             <li><a href="/about" className="text-gray-400 hover:text-blue-400">About Us</a></li>
             <li><a href="/contact" className="text-gray-400 hover:text-blue-400">Contact</a></li>
+            <li><a href="/code" className="text-gray-400 hover:text-blue-400">Code</a></li>
             <li><a href="/create" className="text-gray-400 hover:text-blue-400">Create</a></li>
           </ul>
         </div>
         <div>
           <h3 className="text-xl font-bold mb-4">Contact Us</h3>
           <div className="text-gray-400">
-            <p>Email: info@codecollab.ai</p>
-            <p>Phone: (555) 123-4567</p>
+            <p>Email: devrajbando@gmail.com</p>
+            {/* <p>Phone: (555) 123-4567</p> */}
           </div>
         </div>
       </div>

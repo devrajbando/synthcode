@@ -64,6 +64,16 @@ const About = () => {
             revolutionizing collaborative coding with real-time features and AI-driven assistance.
           </p>
         </div>
+        <AnimatedContent
+              distance={100}
+              direction="vertical"
+              reverse={false}
+              config={{ tension: 30, friction: 20 }}
+              initialOpacity={0}
+              animateOpacity
+              scale={1}
+              threshold={0.4}
+            >
 
         <div className="mb-16">
           <h2 className="text-2xl font-semibold text-gray-900 dark:text-white mb-6">
@@ -80,17 +90,29 @@ const About = () => {
             {/* </CardContent> */}
           </SpotlightCard>
         </div>
+        
 
         
         <h2 className="text-2xl font-semibold text-gray-900 dark:text-white mb-6">
           Meet Our Team
         </h2>
-
+        <AnimatedContent
+              distance={100}
+              direction="vertical"
+              reverse={false}
+              config={{ tension: 30, friction: 20 }}
+              initialOpacity={0}
+              animateOpacity
+              scale={1}
+              threshold={0}
+            >
+          
+        
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {teamMembers.map((member) => (
               // <Masonry>
-              
               <SpotlightCard key={member.name} className="bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm">
+             
               {/* <CardContent className="p-6"> */}
                 <div className="text-center">
                     
@@ -114,9 +136,12 @@ const About = () => {
                     {member.role}
                   </p>
                   <div className="flex justify-center space-x-4">
-                    <a href={member.github} target='_blank' className="text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white">
+                    {member.github &&
+
+                      <a href={member.github} target='_blank' className="text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white">
                       <Github className="w-5 h-5" />
                     </a>
+                    }
                     <a href={member.linkedin} target='_blank' className="text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white">
                       <Linkedin className="w-5 h-5" />
                     </a>
@@ -126,10 +151,14 @@ const About = () => {
                   </div>
                 </div>
               {/* </CardContent> */}
+            
             </SpotlightCard>
-                    // </Masonry>
+                     //</Masonry>
                 ))}
         </div>
+        </AnimatedContent>
+        
+                </AnimatedContent>
                 </AnimatedContent>
                 
       </div>
