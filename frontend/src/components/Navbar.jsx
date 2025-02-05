@@ -53,10 +53,13 @@ const Navbar = () => {
     <nav className="bg-gray-900 text-white py-4 fixed w-full top-0 z-50">
       <div className="container mx-auto px-4">
         <div className="flex justify-between items-center">
+          <button onClick={()=>navigate('/')}>
+
           <div className="flex items-center space-x-2">
             <Code className="w-8 h-8 text-blue-500" />
             <span className="text-xl font-bold">synthCode</span>
           </div>
+          </button>
           
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-8">

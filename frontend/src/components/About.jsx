@@ -12,7 +12,7 @@ const teamMembers = [
     name: "Devraj Bandopadhyay",
     role: "Full Stack Developer",
     photo: devraj,
-    github: "https://github.com/devraj",
+    github: "https://github.com/devrajbando",
     linkedin: "https://www.linkedin.com/in/devraj-bandopadhyay-366b96288/",
     email: "23je0305@iitism.ac.in"
   },
@@ -20,7 +20,7 @@ const teamMembers = [
     name: "Arman Bhattacharjee",
     role: "ML Engineer",
     photo:arman,
-    github: "https://github.com/arman",
+    github: "https://github.com/quacky20",
     linkedin: "https://www.linkedin.com/in/arman-bhattacharjee-18293b287/",
     email: "23je0149@iitism.ac.in"
   },
@@ -28,7 +28,7 @@ const teamMembers = [
     name: "Debantar Chakraborty",
     role: "Product Manager",
     photo: debantar,
-    github: "https://github.com/debantar",
+    // github: "https://github.com/debantar",
     linkedin: "https://www.linkedin.com/in/debantar-chakraborty-015708285/",
     email: "23je0292@iitism.ac.in"
   },

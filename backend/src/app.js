@@ -10,12 +10,14 @@ import projectRouter from './routes/project.routes.js';
 
 const app=express()
 
-app.use(cors({
-    origin:'https://synthcode.vercel.app',
-    methods: ['GET', 'POST', 'PUT', 'DELETE'],
-  allowedHeaders: ['Content-Type', 'Authorization'],
-    credentials:true,
-}))
+app.use(cors(
+//   {
+//     origin:'https://synthcode.vercel.app',
+//     methods: ['GET', 'POST', 'PUT', 'DELETE'],
+//   allowedHeaders: ['Content-Type', 'Authorization'],
+//     credentials:true,
+// }
+))
 
 
 

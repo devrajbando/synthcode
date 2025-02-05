@@ -9,7 +9,7 @@ import {
   DialogTitle,
   DialogFooter,
 } from './ui/dialog';
-
+import RotatingText from './ui/RotatingText'
 function Create() {
   const navigate = useNavigate();
   const [isNewProjectModalOpen, setIsNewProjectModalOpen] = useState(false);
@@ -152,9 +152,22 @@ function Create() {
           threshold={0.2}
         >
           <div className="mx-auto px-[180px] flex flex-col">
-            <h1 className="text-6xl text-white text-left mt-[140px] py-10">
+
+          <RotatingText
+  texts={['Code', 'Create', 'Collaborate']}
+  mainClassName="px-2 sm:px-2 md:px-3 bg-cyan-300 text-black overflow-hidden py-0.5 sm:py-1 md:py-2 justify-center rounded-lg"
+  staggerFrom={"last"}
+  initial={{ y: "100%" }}
+  animate={{ y: 0 }}
+  exit={{ y: "-120%" }}
+  staggerDuration={0.025}
+  splitLevelClassName="overflow-hidden pb-0.5 sm:pb-1 md:pb-1"
+  transition={{ type: "spring", damping: 30, stiffness: 400 }}
+  rotationInterval={2000}
+/>
+            {/* <h1 className="text-6xl text-white text-left mt-[140px] py-10">
               Code, Create, Collaborate
-            </h1>
+            </h1> */}
             <h2 className="text-2xl font-normal w-3/4 text-left py-5 text-white">
               Make exciting coding projects with your friends
             </h2>
