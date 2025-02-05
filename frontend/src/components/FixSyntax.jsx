@@ -8,8 +8,9 @@ export default function FixSyntax({ editorRef, language, output }) {
   const [fixedCodde, setFixedCode] = useState('');
   const [isOpen, setIsOpen] = useState(false);
   const fixSyntaxError = async (language, code, errorMessage) => {
+    const API_URL = import.meta.env.VITE_API_URL;
     try {
-      const response = await fetch('http://localhost:8000/ai/fix-syntax', {
+      const response = await fetch(`${API_URL}/ai/fix-syntax`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

@@ -31,10 +31,10 @@ const [username,setUsername]=useState("")
       [name]: value
     }));
   };
-
+  const API_URL = import.meta.env.VITE_API_URL;
   const getCurrentUser= async()=>{
     try {
-        const response = await fetch('http://localhost:8000/api/users/current-user', {
+        const response = await fetch(`${API_URL}/api/users/current-user`, {
             method: 'POST',
             credentials: 'include', // Include cookies in the request
             headers: {
@@ -95,7 +95,7 @@ getCurrentUser()
 
     // Here you would typically call an API to change the password
     try {
-        const response = await fetch('http://localhost:8000/api/users/change-pass', {
+        const response = await fetch(`${API_URL}/api/users/change-pass`, {
             method: 'POST',
             credentials: 'include', // Include cookies in the request
             headers: {

@@ -46,10 +46,10 @@ export default function GenerateDoc() {
       setFunctionText("");
     }
   };
-
+  const API_URL = import.meta.env.VITE_API_URL;
   const generateSimpleDocString = async(functionText) => {
     try {
-      const response = await fetch('http://localhost:8000/ai/generateDoc', {
+      const response = await fetch(`${API_URL}/ai/generateDoc`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

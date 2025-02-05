@@ -12,9 +12,9 @@ const CodeSnippetGenerator = () => {
 
     setIsLoading(true);
     setError(null);
-
+    const API_URL = import.meta.env.VITE_API_URL;
     try {
-      const response = await fetch('http://localhost:8000/ai/generate-snippet', {
+      const response = await fetch(`${API_URL}/ai/generate-snippet`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

@@ -7,7 +7,7 @@ const SignOut = () => {
   const navigate = useNavigate();
   const [error, setError] = useState('');
   const { setUser } = useAuthContext()
-
+  const API_URL = import.meta.env.VITE_API_URL;
 
   const handleSubmit = async(e) => {
     e.preventDefault();
@@ -20,7 +20,7 @@ const SignOut = () => {
     }
 
     try {
-        const response = await fetch('http://localhost:8000/api/users/logout', {
+        const response = await fetch(`${API_URL}/api/users/logout`, {
             method: 'POST',
             credentials: 'include', // Include cookies in the request
             headers: {

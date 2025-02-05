@@ -176,11 +176,11 @@ const [copyColour,setCopyColour]=useState("color-gray-100")
       console.log(`Adding folder ${newFolderName} to ${parentPath}`);
     }
   };
-
+  const API_URL = import.meta.env.VITE_API_URL;
   useEffect(() => {
   const getProjectData=async()=>{
     try {
-      const response = await fetch(`http://localhost:8000/api/project/${projectId}`, {
+      const response = await fetch(`${API_URL}/api/project/${projectId}`, {
           method: 'GET',
           
           headers: {

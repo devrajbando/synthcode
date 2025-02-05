@@ -16,7 +16,7 @@ const Signup = () => {
   async function registerUser(event) {
     event.preventDefault();
 
-
+    const API_URL = import.meta.env.VITE_API_URL;
     if(username == '' || email =='' || password ==''){
       setError('All fields must be filled');
       return;
@@ -31,7 +31,7 @@ const Signup = () => {
        
 
     try {
-        const response = await fetch('http://localhost:8000/api/users/signup', {
+        const response = await fetch(`${API_URL}/api/users/signup`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

@@ -43,12 +43,12 @@ function Create() {
       color: "bg-cyan-400"
     }
   ];
-
+  const API_URL = import.meta.env.VITE_API_URL;
   const handleNewProjectSubmit = async() => {
     if (newProjectName.trim()) {
 
       try {
-        const response = await fetch('http://localhost:8000/api/project/create-new', {
+        const response = await fetch(`${API_URL}/api/project/create-new`, {
           method: 'POST',
           credentials:"include",
           headers: {
