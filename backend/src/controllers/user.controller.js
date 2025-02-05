@@ -142,7 +142,8 @@ const LoginUser=asyncHandler(async(req,res)=>{
 
     const options={
         httpOnly:true,//for local its false, later set true
-        secure:true
+        secure:true,
+        sameSite: "None",
     }
     console.log("reached final point ",accessToken)
     return res   
