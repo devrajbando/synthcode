@@ -1,4 +1,4 @@
-# 🖥️ <> synthcode: An AI-Powered Real-Time Collaborative Code Editor
+# 🖥️ synthCode: An AI-Powered Real-Time Collaborative Code Editor
 
 ## 🚀 Overview
 Our **AI-powered real-time collaborative code editor** is designed to bring developers together in a seamless and intelligent coding environment. It allows users to create and join projects, collaborate in real-time, and leverage AI-driven features to enhance their coding experience.
