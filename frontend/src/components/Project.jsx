@@ -148,7 +148,7 @@ const [copyColour,setCopyColour]=useState("color-gray-100")
       
 <div className='flex'>
 
-        <FileExplorer/>
+        <FileExplorer projectName={projectDetails.name}/>
         <Edit/>
 </div>
       
