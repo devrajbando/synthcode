@@ -216,7 +216,7 @@
 // }
 
 import React, { useState, useRef, useEffect } from "react";
-import { HStack, Box } from "@chakra-ui/react";
+import { HStack, Box, VStack, Flex, useBreakpointValue } from "@chakra-ui/react";
 import { io } from "socket.io-client";
 import Editor from "@monaco-editor/react";
 import Language from "./Languages";
@@ -346,7 +346,11 @@ export default function Edit() {
   };
 
   
-
+  const isMobile = useBreakpointValue({ base: true, md: false });
+  const layoutDirection = useBreakpointValue({ 
+    base: 'column', 
+    md: 'row' 
+  });
 
   
   return (
@@ -354,35 +358,89 @@ export default function Edit() {
     
 
       
-    <Box >
-
-      <HStack bg="blue.950" display="flex" justifyContent="center" alignItems="top" >
-        <Box w="60%">
-          <HStack display="flex" justifyContent="start" alignItems="top">
-
-          <Language language={language} onSelect={onSelect} />
-           
-          <CodeSnippetGenerator/>
-          </HStack>
-          <Editor
-            height="60vh"
-            theme="vs-dark"
-            language={language}
-            onMount={handleEditorDidMount}
-            defaultValue={C.CODE_SNIPPETS.javascript}
-            onChange={sendCode}
-            options={{ renderWhitespace: "all" }}
+    <Box 
+      p={4} 
+      bg="gray.900" 
+      minHeight="100vh" 
+      width="full"
+    >
+      <Flex 
+        direction={layoutDirection} 
+        gap={4} 
+        width="full"
+      >
+        {/* Main Editor Column */}
+        <VStack 
+          width={isMobile ? '100%' : '60%'} 
+          spacing={4}
+        >
+          {/* Top Controls */}
+          <HStack 
+            width="full" 
+            justifyContent="space-between" 
+            alignItems="center"
+          >
+            <Language 
+              language={language} 
+              onSelect={setLanguage} 
+              width={isMobile ? 'full' : 'auto'}
             />
-            
-            <GenerateDoc/>
+            <CodeSnippetGenerator />
+          </HStack>
+
+          {/* Monaco Editor */}
+          <Box width="full">
+            <Editor
+              height={isMobile ? '50vh' : '60vh'}
+              theme="vs-dark"
+              language={language}
+              onMount={handleEditorDidMount}
+              defaultValue={C.CODE_SNIPPETS.javascript}
+              onChange={sendCode}
+              options={{ 
+                renderWhitespace: "all",
+                minimap: { enabled: false }, // Improve mobile view
+                fontSize: useBreakpointValue({ base: 12, md: 14 }),
+                wordWrap: 'on' // Improve text wrapping
+              }}
+            />
+          </Box>
+
+          {/* Documentation Generator */}
+          <GenerateDoc />
+        </VStack>
+
+        {/* Output Column */}
+        {!isMobile && (
+          <Box 
+            width="30%" 
+            bg="gray.800" 
+            p={4} 
+            borderRadius="md"
+          >
+            <Output 
+              editorRef={editorRef} 
+              language={language} 
+            />
+          </Box>
+        )}
+      </Flex>
+
+      {/* Mobile Output - Only shown on mobile */}
+      {isMobile && (
+        <Box 
+          mt={4} 
+          width="full" 
+          bg="gray.800" 
+          p={4} 
+          borderRadius="md"
+        >
+          <Output 
+            editorRef={editorRef} 
+            language={language} 
+          />
         </Box>
-
-        
-        <Box w="30%" >
-        <Output editorRef={editorRef} language={language} />
-      </Box>
-
-      </HStack>
+      )}
     </Box>
             
          

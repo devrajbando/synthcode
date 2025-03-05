@@ -1,4 +1,11 @@
 import React, { useState } from 'react';
+import { 
+  Box,   VStack,   HStack,  Flex,   Text,   Button,   Input ,
+  useDisclosure, 
+  useBreakpointValue,
+  Grid,
+  GridItem
+} from '@chakra-ui/react';
 import AnimatedContent from './ui/AnimateContent';
 import { FolderPlus, FilePlus, FolderOpen,X } from 'lucide-react';
 import { useNavigate } from "react-router-dom";
@@ -21,32 +28,7 @@ function Create() {
   const [projectId,setprojectId]=useState("")
   const [isJoinOpen, setIsJoinOpen] = useState(false);
   const [projectCode, setProjectCode] = useState('');
-  const projects = [
-    {
-      id: 1,
-      name: "E-commerce Website",
-      description: "Online store with product catalog and cart functionality",
-      lastModified: "2 hours ago",
-      language: "JavaScript",
-      color: "bg-yellow-400"
-    },
-    {
-      id: 2,
-      name: "Task Manager API",
-      description: "RESTful API for task management application",
-      lastModified: "1 day ago",
-      language: "Python",
-      color: "bg-blue-400"
-    },
-    {
-      id: 3,
-      name: "Mobile App UI",
-      description: "User interface design for fitness tracking app",
-      lastModified: "3 days ago",
-      language: "React Native",
-      color: "bg-cyan-400"
-    }
-  ];
+
   const API_URL = import.meta.env.VITE_API_URL;
   const handleNewProjectSubmit = async() => {
     if (newProjectName.trim()) {
@@ -139,103 +121,160 @@ function Create() {
     navigate('/project', { state: { projectId: id } });
   }
 
+  const backgroundImageStyle = useBreakpointValue({
+    base: { 
+      backgroundSize: 'cover', 
+      backgroundPosition: 'center' 
+    },
+    md: { 
+      backgroundSize: 'cover', 
+      backgroundPosition: 'center' 
+    }
+  });
+
   
   return (
-    <>
-      <div className="relative h-full bg-blue-900 opacity-70">
-        <div
-          className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-25"
-          style={{
-            backgroundImage: `url('https://images.unsplash.com/photo-1542831371-29b0f74f9713?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D')`,
-          }}
-        />
-        <AnimatedContent
-          distance={80}
-          direction="horizontal"
-          reverse={false}
-          config={{ tension: 50, friction: 25 }}
-          initialOpacity={0.2}
-          animateOpacity
-          scale={1.2}
-          threshold={0.2}
+    <Box position="relative" height="100vh" bg="blue.900" opacity={0.95}>
+      {/* Background Image */}
+      <Box
+        position="absolute"
+        top={0}
+        left={0}
+        right={0}
+        bottom={0}
+        bgImage="url('https://images.unsplash.com/photo-1542831371-29b0f74f9713?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D')"
+        bgRepeat="no-repeat"
+        bgSize="cover"
+        bgPosition="center"
+        opacity={0.25}
+        height="100vh"
+        width="100vw"
+      />
+
+      <AnimatedContent
+        distance={80}
+        direction="horizontal"
+        config={{ tension: 50, friction: 25 }}
+        initialOpacity={0.2}
+        animateOpacity
+        scale={1.2}
+        threshold={0.2}
+      >
+        <VStack 
+          spacing={6} 
+          align="start" 
+          maxW="container.xl" 
+          mx="auto" 
+          px={[4, 10, 20]} 
+          position="relative" 
+          zIndex={10}
         >
-          <div className="mx-auto px-[180px] flex flex-col">
-
-            <h1 className="text-6xl text-white text-left mt-[140px] py-10">
-          <RotatingText
-  texts={['Code', 'Create', 'Collaborate']}
-  mainClassName="px-2 sm:px-2 md:px-3 text-white overflow-hidden py-0.5 sm:py-1 md:py-2 justify-start rounded-lg"
-  staggerFrom={"last"}
-  initial={{ y: "100%" }}
-  animate={{ y: 0 }}
-  exit={{ y: "-120%" }}
-  staggerDuration={0.025}
-  splitLevelClassName="overflow-hidden pb-0.5 sm:pb-1 md:pb-1"
-  transition={{ type: "spring", damping: 30, stiffness: 400 }}
-  rotationInterval={2000}
-/>
-              {/* Code, Create, Collaborate */}
-            </h1>
-            <h2 className="text-2xl font-normal w-3/4 text-left py-5 text-white">
+          {/* Header */}
+          <Box>
+            <Text 
+              fontSize={['4xl', '5xl', '6xl']} 
+              color="white" 
+              textAlign="left" 
+              mt={[20, 24, 32]}
+            >
+              <RotatingText
+                texts={['Code', 'Create', 'Collaborate']}
+                mainClassName="text-white"
+                rotationInterval={2000}
+              />
+            </Text>
+            <Text 
+              fontSize={['xl', '2xl']} 
+              color="white" 
+              w={['full', '3/4']} 
+              textAlign="left" 
+              py={4}
+            >
               Make exciting coding projects with your friends
-            </h2>
-            <div className="flex gap-4">
-              <button 
-                className="flex items-center gap-2 bg-blue-950 hover:bg-blue-900 text-white px-4 py-2 rounded-lg transition-colors duration-200 shadow-md"
-                onClick={() => setIsNewProjectModalOpen(true)}
+            </Text>
+          </Box>
+
+          {/* Action Buttons */}
+          <HStack spacing={4}>
+            <Button 
+            className='p-2'
+              leftIcon={<FilePlus />}
+              bg="blue.950"
+              color="white"
+              _hover={{ bg: 'blue.900' }}
+              // onClick={openNewProjectModal}
+              onClick={() => setIsNewProjectModalOpen(true)}
+            >
+              <FilePlus className="w-5 h-5" />
+              <span className="font-medium">New Project</span>
+            </Button>
+
+            <Button 
+              leftIcon={<FolderPlus />}
+              variant="outline"
+              className='p-2'
+              bg="white"
+              color="blue.950"
+              borderColor="blue.950"
+              _hover={{ bg: 'gray.100' }}
+              // onClick={openJoinProjectModal}
+              onClick={() => setIsJoinOpen(true)}
+            >
+              <FolderPlus className="w-5 h-5" />
+              <span className="font-medium">Join Project</span>
+            </Button>
+          </HStack>
+
+          {/* Projects Grid */}
+          <Box w="full" p={6}
+                 >
+            <VStack spacing={6} align="stretch">
+              <VStack spacing={2} textAlign="center">
+                <Text fontSize="2xl" fontWeight="bold" color="gray.100">
+                  Your Projects
+                </Text>
+                <Text color="gray.100">
+                  Recent projects you've been working on
+                </Text>
+              </VStack>
+
+              <Grid 
+                templateColumns={['1fr', 'repeat(2, 1fr)', 'repeat(3, 1fr)']} 
+                gap={6}
               >
-                <FilePlus className="w-5 h-5" />
-                <span className="font-medium">New Project</span>
-              </button>
-
-              <button 
-                className="flex items-center gap-2 border-2 bg-white border-blue-950 text-blue-950 hover:bg-gray-300 px-4 py-2 rounded-lg transition-colors duration-200 shadow-md"
-                onClick={() => setIsJoinOpen(true)}
-              >
-                <FolderPlus className="w-5 h-5" />
-                <span className="font-medium">Join Project</span>
-              </button>
-            </div>
-
-            {/* Projects List Rendering Remains the Same */}
-            <div className="p-6">
-              <div className="mb-6 text-center">
-                <h2 className="text-2xl font-bold text-gray-100">Your Projects</h2>
-                <p className="text-gray-100">Recent projects you've been working on</p>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {user.projects && user.projects.map((project) => (
-                  <div 
-                    key={project._id}
-                    className="bg-blue-950 rounded-lg shadow-md border border-gray-200 hover:shadow-lg transition-shadow duration-200"
-                  >
-                    <div className="p-6">
-                      <div className="flex items-center justify-between mb-4">
-                        <button className="flex items-center gap-3" onClick={()=>goToProject(project.project)}>
-                          <FolderOpen  className="w-5 h-5 text-gray-200" />
-                          <h3 className="font-semibold text-lg text-gray-100">{project.name}</h3>
-                        </button>
-                      </div>
-
-                      <p className="text-white mb-4 line-clamp-2">{project.description}</p>
-
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-2">
-                          {/* <div className={`w-3 h-3 rounded-full ${project.color}`}></div> */}
-                          {/* <span className="text-sm text-white">{project.language}</span> */}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
+                {user.projects?.map((project) => (
+                  <GridItem key={project._id}>
+                    <Box
+                      bg="blue.950"
+                      rounded="lg"
+                      shadow="md"
+                      border="1px"
+                      borderColor="gray.200"
+                      p={6}
+                      transition="all 0.2s"
+                      _hover={{ shadow: 'lg' }}
+                    >
+                      <Flex justify="space-between" align="center" mb={4}>
+                        <Button 
+                          variant="ghost" 
+                          leftIcon={<FolderOpen color="gray.200" />}
+                          onClick={() => goToProject(project.project)}
+                        >
+                          {project.name}
+                        </Button>
+                      </Flex>
+                      <Text color="white" noOfLines={2} mb={4}>
+                        {project.description}
+                      </Text>
+                    </Box>
+                  </GridItem>
                 ))}
-              </div>
-            </div>
-          </div>
-        </AnimatedContent>
-      </div>
+              </Grid>
+            </VStack>
+          </Box>
+        </VStack>
+      </AnimatedContent>
 
-      {/* New Project Modal */}
       {isNewProjectModalOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-blue-950 rounded-lg p-6 w-full max-w-md">
@@ -273,7 +312,8 @@ function Create() {
         </div>
       )}
 
-{isJoinOpen && (
+     
+      {isJoinOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-blue-950 rounded-lg p-6 w-full max-w-md">
             <h2 className="text-xl font-semibold mb-4 text-white">Join Project</h2>
@@ -308,7 +348,7 @@ function Create() {
           </div>
         </div>
       )}
-    </>
+    </Box>
   );
 }
 
