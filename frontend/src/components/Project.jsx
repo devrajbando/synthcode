@@ -12,148 +12,9 @@ import {
 } from 'lucide-react';
 import { useLocation,useParams } from 'react-router-dom';
 import Edit from './Editor';
+import FileExplorer from './FileExplorer';
 // Mock data - replace with actual project data
-const initialProjectData = {
-  name: "E-Commerce Platform",
-  projectCode: "ECOM-2024-XYZ",
-  members: [
-    { id: 1, name: "John Doe", role: "Admin", isAdmin: true },
-    { id: 2, name: "Jane Smith", role: "Developer", isAdmin: false },
-    { id: 3, name: "Mike Johnson", role: "Designer", isAdmin: false }
-  ],
-  fileStructure: {
-    name: "E-Commerce Platform",
-    type: 'folder',
-    children: [
-      { 
-        name: "frontend", 
-        type: 'folder', 
-        children: [
-          { name: "index.html", type: 'file' },
-          { name: "styles.css", type: 'file' },
-          { 
-            name: "components", 
-            type: 'folder', 
-            children: [
-              { name: "Header.jsx", type: 'file' },
-              { name: "Footer.jsx", type: 'file' }
-            ]
-          }
-        ]
-      },
-      { 
-        name: "backend", 
-        type: 'folder', 
-        children: [
-          { name: "server.js", type: 'file' },
-          { name: "routes.js", type: 'file' }
-        ]
-      }
-    ]
-  }
-};
 
-
-// projectData
-
-// const FileTree = ({ structure, onAddFolder, onAddFile, onRename, onDelete }) => {
-//   const [expanded, setExpanded] = useState({});
-//   const [editingItem, setEditingItem] = useState(null);
-//   const [newItemName, setNewItemName] = useState('');
-
-//   const renderTree = (node, path = '') => {
-//     const isExpanded = expanded[path];
-//     const fullPath = path ? `${path}/${node.name}` : node.name;
-
-//     return (
-//       <div key={fullPath} className="pl-4">
-//         <div className="flex items-center hover:bg-gray-100 py-1">
-//           {node.type === 'folder' ? (
-//             <button 
-//               onClick={() => setExpanded(prev => ({
-//                 ...prev,
-//                 [path]: !prev[path]
-//               }))}
-//               className="mr-2"
-//             >
-//               {isExpanded ? '▼' : '►'}
-//             </button>
-//           ) : (
-//             <File className="w-4 h-4 mr-2 text-gray-500" />
-//           )}
-          
-//           {editingItem === fullPath ? (
-//             <input 
-//               type="text"
-//               value={newItemName}
-//               onChange={(e) => setNewItemName(e.target.value)}
-//               onBlur={() => {
-//                 onRename(path, newItemName);
-//                 setEditingItem(null);
-//               }}
-//               onKeyDown={(e) => {
-//                 if (e.key === 'Enter') {
-//                   onRename(path, newItemName);
-//                   setEditingItem(null);
-//                 }
-//               }}
-//               autoFocus
-//               className="border rounded px-2 py-1 mr-2"
-//             />
-//           ) : (
-//             <span className="flex-grow">{node.name}</span>
-//           )}
-
-//           <div className="flex items-center ml-auto">
-//             {node.type === 'folder' && (
-//               <button 
-//                 onClick={() => onAddFolder(fullPath)}
-//                 className="mr-2 hover:bg-gray-200 rounded p-1"
-//               >
-//                 <Plus className="w-4 h-4" />
-//               </button>
-//             )}
-//             {node.type === 'folder' && (
-//               <button 
-//                 onClick={() => onAddFile(fullPath)}
-//                 className="mr-2 hover:bg-gray-200 rounded p-1"
-//               >
-//                 <File className="w-4 h-4" />
-//               </button>
-//             )}
-//             <button 
-//               onClick={() => {
-//                 setEditingItem(fullPath);
-//                 setNewItemName(node.name);
-//               }}
-//               className="mr-2 hover:bg-gray-200 rounded p-1"
-//             >
-//               <Pencil className="w-4 h-4" />
-//             </button>
-//             <button 
-//               onClick={() => onDelete(path)}
-//               className="hover:bg-red-100 rounded p-1 hover:text-red-600"
-//             >
-//               <Trash2 className="w-4 h-4" />
-//             </button>
-//           </div>
-//         </div>
-        
-//         {node.type === 'folder' && isExpanded && node.children && (
-//           <div className="pl-4 border-l">
-//             {node.children.map(child => renderTree(child, fullPath))}
-//           </div>
-//         )}
-//       </div>
-//     );
-//   };
-
-//   return (
-//     <div className="bg-white border rounded p-4">
-//       {renderTree(structure)}
-//     </div>
-//   );
-// };
 
 const Project = () => {
   // const { projectId } = useParams();
@@ -270,7 +131,7 @@ const [copyColour,setCopyColour]=useState("color-gray-100")
             <h2 className="text-lg font-semibold mb-2">Team Members</h2>
             {projectDetails.members.map(member => (
               <div 
-                
+              key={member}
                 className="flex items-center justify-between py-1 last:border-b-0"
               >
                 <div className="flex items-center">
@@ -283,19 +144,14 @@ const [copyColour,setCopyColour]=useState("color-gray-100")
           </div>
         </div>
 
-        {/* File Structure Column
-        <div>
-          <FileTree 
-            structure={projectDetails.fileStructure}
-            onAddFolder={handleAddFolder}
-            onAddFile={handleAddFile}
-            onRename={handleRename}
-            onDelete={handleDelete}
-          />
-        </div> */}
+       
+      
+<div className='flex'>
 
-        {/* Code Editor Column */}
+        <FileExplorer/>
         <Edit/>
+</div>
+      
       </div>
     </div>
   );

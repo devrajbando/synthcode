@@ -12,8 +12,8 @@ const app=express()
 
 app.use(cors(
   {
-    // origin:'http://localhost:5173',
-    origin:'https://synthcode.vercel.app',
+    origin:'http://localhost:5173',
+    // origin:'https://synthcode.vercel.app',
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
   allowedHeaders: ['Content-Type', 'Authorization'],
     credentials:true,
@@ -42,8 +42,8 @@ const server = createServer(app);
 
 const io = new Server(3002, {
   cors: {
-    // origin: ["http://localhost:5173/"],
-    origin: ["https://synthcode.vercel.app"],
+    origin: ["http://localhost:5173"],
+    // origin: ["https://synthcode.vercel.app"],
   },
 });
 
@@ -70,7 +70,7 @@ io.on('connection', (socket) => {
   })
 
 
-  socket.on("cursor-move", ({ userId, position }) => {
+  socket.on("cursor-move", ({ userId, position }) => { 
     socket.broadcast.emit("cursor-update", { userId, position });
   });
 

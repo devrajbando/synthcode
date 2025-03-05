@@ -5,8 +5,32 @@ import bcrypt from 'bcrypt'
 import { ApiResponse } from "../utils/ApiResponse.js";
 import jwt from 'jsonwebtoken'
 import { mongoose } from "mongoose";
+import { OAuth2Client } from 'google-auth-library';
 // import { sendEmail } from "../utils/SendEmail.js";
+const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
+const verifyGoogleToken=async(token)=>{
+    try {
+        const ticket = await client.verifyIdToken({
+          idToken: token,
+          audience: process.env.GOOGLE_CLIENT_ID,
+        });
+        
+        const payload = ticket.getPayload();
+        
+        // Get user data
+        const userData = {
+          email: payload.email,
+          name: payload.name,
+          picture: payload.picture
+        };
+        
+        return userData;
+      } catch (error) {
+        console.error('Error verifying Google token:', error);
+        throw error;
+      }
+}
 const generateAccessAndRefreshToken=async(userId)=>
     {
         try {
@@ -22,37 +46,6 @@ const generateAccessAndRefreshToken=async(userId)=>
             throw new ApiError(500,"something went wrong on our side")
         }
     }
-
-// const verifyEmail=asyncHandler(async(req,res)=>{
-    
-        
-//         const email=req.body.email;
-//         const username=req.body.username
-//         const existedUser=await User.findOne({
-//             $or:[{username},{email}]
-//         })
-//         if(existedUser){
-//             throw new ApiError(409,"User with email or username already exists")
-//         }
-        
-        
-
-//             return res.status(201).json(
-//                 new ApiResponse(201,"username","New user")
-//             )
-        
-    
-        
-        
-//         // console.log(existedUser)
-//         // const url = `${process.env.BASE_URL}users/${user.id}/verify/${token.token}`;
-//         // await sendEmail(user.email, "Verify Email", url);
-        
-        
-//         // return res.status(201).send("Email sent to your account to verify")
-//     })
-            
-
 
 const registerUser=asyncHandler(async(req,res)=>{
     try {
@@ -247,5 +240,6 @@ export {generateAccessAndRefreshToken,
     LogoutUser
     ,checkAuth,
     ChangePassword,
-    CurrentUser
+    CurrentUser,
+    verifyGoogleToken
 }

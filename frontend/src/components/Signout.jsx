@@ -2,13 +2,15 @@ import React, { useState } from 'react';
 import { Mail, Lock, AlertTriangle } from 'lucide-react';
 import {useNavigate} from "react-router-dom"
 import { useAuthContext } from '../hooks/useAuthContext';
+// import { GoogleLogout } from '@react-oauth/google';
+import { googleLogout } from '@react-oauth/google';
 const SignOut = () => {
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
   const [error, setError] = useState('');
   const { setUser } = useAuthContext()
   const API_URL = import.meta.env.VITE_API_URL;
-
+  const clientId= import.meta.env.GOOGLE_CLIENT_ID
   const handleSubmit = async(e) => {
     e.preventDefault();
     setError('');
@@ -55,6 +57,14 @@ const SignOut = () => {
     }
   };
 
+  const onSuccess=()=>{
+    console.log('Logout successful');
+            
+            setUser(null)
+            alert('Logout successful');
+            navigate('/login');
+  }
+
   return (
     <div className="min-h-screen bg-blue-950 flex items-center justify-center px-4">
       <div className="bg-gray-900 shadow-md rounded-lg w-full max-w-md p-8">
@@ -98,7 +108,15 @@ const SignOut = () => {
             >
               Confirm Sign Out
             </button>
+            
 
+            <div>
+              <googleLogout
+                clientId={clientId}
+                buttonText="Logout"
+                onLogoutSuccess={onSuccess}
+              />
+            </div>
             <button
               type="button"
               onClick={()=>{navigate('/')}}
@@ -106,6 +124,7 @@ const SignOut = () => {
             >
               Cancel
             </button>
+
           </div>
         </form>
       </div>

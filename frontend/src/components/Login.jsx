@@ -4,13 +4,15 @@ import { useAuthContext } from '../hooks/useAuthContext';
 import AnimatedContent from "./ui/AnimateContent";
 import { Link } from 'react-router-dom';
 import { Mail, Lock, AlertCircle } from 'lucide-react';
+import { GoogleLogin } from '@react-oauth/google';
+import {jwtDecode} from "jwt-decode";
 export default function Login() {
  
   const [email, setEmail] = useState('')
 	const navigate = useNavigate();
 	const [password, setPassword] = useState('')
     const [error, setError] = useState('');
-    
+    const clientId= import.meta.env.GOOGLE_CLIENT_ID
     const { setUser } = useAuthContext();
 
     async function LoginUser(event) {
@@ -49,9 +51,30 @@ export default function Login() {
                 setError('Please check your username and password');
             }
         } catch (error) {
-            console.error('Error during login:', error);
+            console.error('Error during login:', error)
             setError('An error occurred. Please try again.');
         }
+    }
+
+    const onSuccess=(res)=>{
+      console.log('Login successful');
+      console.log(res)
+                console.log(res.profileObj)
+                // setUser(res.profileObj)
+                const decoded = jwtDecode(res.credential);
+                console.log("Decoded User:", decoded);
+                console.log(decoded.email)
+                console.log(decoded.name)
+                alert('Login successful');
+                // setUser(decoded.email); 
+                setUser(decoded); 
+                // setUser(decoded.name); 
+                // setUser(decoded.email); 
+                navigate('/');
+              }
+    const onFailure=(res)=>{
+      console.error('Error during login:', res);
+            setError('An error occurred. Please try again.');
     }
 
   return (
@@ -150,6 +173,19 @@ export default function Login() {
           >
             Sign in
           </button>
+          <div>
+            <GoogleLogin
+            clientId={clientId}
+            buttonText="Sign in with Google"
+            onSuccess={onSuccess}
+            onFailure={onFailure}
+            isSignedIn={true}
+            />
+
+           
+
+          
+          </div>
         </form>
       </div>
     </div>

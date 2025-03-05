@@ -4,6 +4,7 @@ import { AuthContext } from '../context/AuthContext';
 import { Link } from 'react-router-dom';
 import { Mail, Lock, User, AlertCircle } from 'lucide-react';
 import AnimatedContent from "./ui/AnimateContent";
+import { GoogleLogin } from '@react-oauth/google';
 const Signup = () => {
   const navigate = useNavigate();
   const [page, setPage] = useState(1);
@@ -12,6 +13,7 @@ const Signup = () => {
   const [password, setPassword] = useState('');
   const [confirm, setConfirm] = useState('');
   const [error, setError] = useState('');
+  const clientId= import.meta.env.GOOGLE_CLIENT_ID
 
   async function registerUser(event) {
     event.preventDefault();
@@ -66,6 +68,27 @@ const Signup = () => {
     }
     
     
+  }
+
+ const onSuccess=(res)=>{
+       console.log('Login successful');
+       console.log(res)
+                 console.log(res.profileObj)
+                 // setUser(res.profileObj)
+                 const decoded = jwtDecode(res.credential);
+                 console.log("Decoded User:", decoded);
+                 console.log(decoded.email)
+                 console.log(decoded.name)
+                 alert('Login successful');
+                 setEmail(decoded.email); 
+                 setUsername(decoded.name); 
+                 // setUser(decoded.name); 
+                 // setUser(decoded.email); 
+                 navigate('/');
+               }
+  const onFailure=(res)=>{
+    console.error('Error during login:', res);
+          setError('An error occurred. Please try again.');
   }
 
    return (
@@ -198,6 +221,19 @@ const Signup = () => {
             >
             Create account
           </button>
+          <div>
+                      <GoogleLogin
+                      clientId={clientId}
+                      buttonText="Sign in with Google"
+                      onSuccess={onSuccess}
+                      onFailure={onFailure}
+                      isSignedIn={true}
+                      />
+          
+               
+          
+                    
+                    </div>
 
         
         </form>

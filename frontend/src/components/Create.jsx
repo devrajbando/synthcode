@@ -142,7 +142,7 @@ function Create() {
   
   return (
     <>
-      <div className="relative h-screen bg-blue-900 opacity-70">
+      <div className="relative h-full bg-blue-900 opacity-70">
         <div
           className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-25"
           style={{
