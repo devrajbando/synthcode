@@ -1,6 +1,5 @@
-import { File, Folder, Tree } from "./magicui/file-tree";
-import { useState,useEffect,useRef } from "react";
-import { ChevronRight, ChevronDown, Plus, FolderPlus, Check, Pencil, Trash } from 'lucide-react';
+import { useState, useEffect } from "react";
+import { ChevronRight, ChevronDown, Plus, FolderPlus, Pencil, Trash, FolderOpen, File, Folder } from 'lucide-react';
 
 const FileTree = () => {
   const [treeData, setTreeData] = useState({
@@ -11,23 +10,28 @@ const FileTree = () => {
     children: [],
   });
 
+  const [isEditing, setIsEditing] = useState(null);
+  const [hoveredNodeId, setHoveredNodeId] = useState(null);
+
   const handleAdd = (parentId, type) => {
     const newItem = {
       id: Math.random().toString(36).substr(2, 9),
-      name: type === "folder" ? "New Folder" : "New File",
+      name: '',
       type,
-      isOpen: false,
-      children: type === "folder" ? [] : null,
+      isOpen: true,
+      children: [],
     };
 
     const updatedTree = addItem(treeData, parentId, newItem);
     setTreeData(updatedTree);
+    setIsEditing(newItem.id);
   };
 
   const addItem = (node, parentId, newItem) => {
     if (node.id === parentId) {
       return {
         ...node,
+        isOpen: true,
         children: [...node.children, newItem],
       };
     }
@@ -40,6 +44,7 @@ const FileTree = () => {
   const handleRename = (id, newName) => {
     const updatedTree = renameItem(treeData, id, newName);
     setTreeData(updatedTree);
+    setIsEditing(null);
   };
 
   const renameItem = (node, id, newName) => {
@@ -90,94 +95,116 @@ const FileTree = () => {
   };
 
   return (
-    <div className="p-1 bg-gray-900">
+    <div className="p-1 bg-gray-900 w-1/4 max-w-md mx-auto">
       <TreeNode
         node={treeData}
         onAdd={handleAdd}
         onRename={handleRename}
         onDelete={handleDelete}
         onToggle={handleToggle}
+        isEditing={isEditing}
+        setIsEditing={setIsEditing}
+        hoveredNodeId={hoveredNodeId}
+        setHoveredNodeId={setHoveredNodeId}
       />
     </div>
   );
 };
 
-const TreeNode = ({ node, onAdd, onRename, onDelete, onToggle }) => {
-  const [isEditing, setIsEditing] = useState(false);
+const TreeNode = ({ node, onAdd, onRename, onDelete, onToggle, isEditing, setIsEditing, hoveredNodeId, setHoveredNodeId }) => {
   const [newName, setNewName] = useState(node.name);
 
   const handleRename = () => {
-    onRename(node.id, newName);
-    setIsEditing(false);
+    if (newName.trim() !== '') {
+      onRename(node.id, newName);
+      setIsEditing(null);
+    }
   };
 
+  useEffect(() => {
+    if (isEditing === node.id) {
+      setNewName(node.name);
+    }
+  }, [isEditing, node.id, node.name]);
+
   return (
-    <div className="pl-2">
-      <div className="flex items-center gap-2">
-        {node.type === "folder" ? (
+    <div
+      className="pl-2"
+      onMouseEnter={() => setHoveredNodeId(node.id)}
+      onMouseLeave={() => setHoveredNodeId(null)}
+    >
+      <div className="flex items-center gap-2 text-sm">
+        {node.type === 'folder' ? (
           <button
             onClick={() => onToggle(node.id)}
             className="flex items-center gap-1"
           >
-            {node.isOpen ? "📂" : "📁"}
-            {isEditing ? (
+            {node.isOpen ? <FolderOpen size={16}/> : <Folder size={16}/>}
+            {isEditing === node.id ? (
               <input
                 type="text"
                 value={newName}
                 onChange={(e) => setNewName(e.target.value)}
-                className="border rounded px-1"
+                className="border rounded px-1 text-sm"
+                onBlur={handleRename}
+                onKeyDown={(e) => e.key === 'Enter' && handleRename()}
+                autoFocus
               />
             ) : (
-              <span>{node.name}</span>
+              <span className="truncate">{node.name}</span>
             )}
           </button>
         ) : (
           <div className="flex items-center gap-1">
-            📄
-            {isEditing ? (
+            <File size={16}/>
+            {isEditing === node.id ? (
               <input
                 type="text"
                 value={newName}
                 onChange={(e) => setNewName(e.target.value)}
-                className="border rounded px-1"
+                className="border rounded px-1 text-sm"
+                onBlur={handleRename}
+                onKeyDown={(e) => e.key === 'Enter' && handleRename()}
+                autoFocus
               />
             ) : (
-              <span>{node.name}</span>
+              <span className="truncate">{node.name}</span>
             )}
           </div>
         )}
 
-        {node.type === "folder" && (
+        {hoveredNodeId === node.id && (
           <div className="flex gap-1">
+            {node.type === 'folder' && (
+              <>
+                <button
+                  onClick={() => onAdd(node.id, 'folder')}
+                  className=" py-1 text-white rounded hover:text-blue-600"
+                >
+                  <FolderPlus size={16}/>
+                </button>
+                <button
+                  onClick={() => onAdd(node.id, 'file')}
+                  className=" py-1 text-white rounded hover:text-blue-600"
+                >
+                  <Plus size={16}/>
+                </button>
+              </>
+            )}
             <button
-              onClick={() => onAdd(node.id, "folder")}
-              className="px-1 py-1 text-white rounded hover:text-blue-900"
+              onClick={() => setIsEditing(node.id)}
+              className=" py-1 text-white rounded hover:text-blue-600"
             >
-              <FolderPlus/>
+              <Pencil size={16}/>
             </button>
             <button
-              onClick={() => onAdd(node.id, "file")}
-              className="px-1 py-1 text-white rounded hover:text-blue-900"
+              onClick={() => onDelete(node.id)}
+              className=" py-1 text-white rounded hover:text-red-600"
             >
-              <Plus/>
+              <Trash size={16}/>
             </button>
           </div>
         )}
-
-        <div className="flex gap-1">
-          <button
-            onClick={() => setIsEditing(true)}
-            className="px-1 py-1 text-white rounded hover:text-blue-900"
-          >
-            Rename
-          </button>
-          <button
-            onClick={() => onDelete(node.id)}
-            className="px-1 py-1 text-white rounded hover:text-red-600"
-          >
-            <Trash/>
-          </button>
-        </div>
       </div>
 
       {node.isOpen &&
@@ -190,6 +217,10 @@ const TreeNode = ({ node, onAdd, onRename, onDelete, onToggle }) => {
             onRename={onRename}
             onDelete={onDelete}
             onToggle={onToggle}
+            isEditing={isEditing}
+            setIsEditing={setIsEditing}
+            hoveredNodeId={hoveredNodeId}
+            setHoveredNodeId={setHoveredNodeId}
           />
         ))}
     </div>

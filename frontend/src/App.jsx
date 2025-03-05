@@ -10,8 +10,6 @@ import Home from './components/Home';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
 import FileExplorer from './components/FileExplorer.jsx';
-import FileExplorer2 from './components/FileExplorer2.jsx';
-import FileExplorer3 from './components/FileExplorer3.jsx';
 import Login from './components/Login';
 import Signup from './components/Signup';
 import About from './components/About';
@@ -58,8 +56,7 @@ function App() {
         <Routes>
           <Route path="/about" element={<About />} />
           <Route path="/files" element={<FileExplorer />} />
-          <Route path="/files2" element={<FileExplorer2 />} />
-          <Route path="/files3" element={<FileExplorer3 />} />
+          
           <Route path="/" element={<Home />} />
           <Route path="/code" element={<Edit />} />
           <Route path="/login" element={<Login/>} />
