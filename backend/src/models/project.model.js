@@ -33,9 +33,9 @@ const ProjectSchema = new mongoose.Schema({
       required: true,
       unique: true
     },
-    rootFolder: {
-      type: Schema.Types.ObjectId,
-      ref: 'Folder'
+    projectData: {
+      type: Object
+      // ref: 'Folder'
     },
     comments: [{
       type: Schema.Types.ObjectId,

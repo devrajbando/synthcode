@@ -221,7 +221,7 @@ const ChangePassword=asyncHandler(async(req,res)=>{
     return res
     .status(200)
     .json(new ApiResponse(200,{},"Password changed Successfully"))
-    })
+})
 
 const CurrentUser=asyncHandler(async(req,res)=>{
     const user=await User.findById(req.user._id)

@@ -20,6 +20,12 @@ const createNewProject=asyncHandler(async(req,res)=>{
         membersId:[req.user._id],
         members:[req.user.username],
         joiningCode:code,
+        projectData:{
+            name: projectName, 
+            type: "folder",
+            children: [],
+            content :null
+          }
     })
     
     await User.findByIdAndUpdate(req.user._id,
@@ -123,4 +129,21 @@ const joinProject=asyncHandler(async(req,res)=>{
     )
 
 })
-export {createNewProject,getData,joinProject}
+
+const updateProject=asyncHandler(async(req,res)=>{
+    const {projectData,projectId}=req.body;
+    const project=await Project.findById(projectId)
+    if(!project){
+        throw new ApiError(404,"Project not found")
+    }
+    await Project.findByIdAndUpdate(projectId,
+        {
+            $set: { projectData: projectData }
+        },
+        {new:true} 
+    )
+    return res
+    .status(200)
+    .json(new ApiResponse(200,{},"Project Updated Successfully"))
+})
+export {createNewProject,getData,joinProject,updateProject}

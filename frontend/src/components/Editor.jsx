@@ -8,13 +8,18 @@ import Output from "./Output";
 import GenerateDoc from "./GenerateDoc";
 import CodeSnippetGenerator from "./CodeSnippetGenerator";
 
-export default function Edit() {
+export default function Edit({ selectedFileContent, onSave }) {
+
   const [language, setLanguage] = useState("javascript");
-  const [code, setCode] = useState(C.CODE_SNIPPETS.javascript);
+  const [code, setCode] = useState(selectedFileContent || "");
   const editorRef = useRef(null);
   const socket = useRef(null);
   const [userHighlights, setUserHighlights] = useState({}); // { userId: { lineNumber, color } }
   const decorationsRef = useRef([]);
+
+  useEffect(() => {
+    setCode(selectedFileContent || "");
+  }, [selectedFileContent]);
 
   // Generate a random color for the current user
   const [userColor, setUserColor] = useState(getRandomColor());
@@ -131,6 +136,10 @@ export default function Edit() {
     }
   };
 
+  const handleSave = () => {
+    onSave(code);
+  };
+
   const isMobile = useBreakpointValue({ base: true, md: false });
   const layoutDirection = useBreakpointValue({ 
     base: 'column', 
@@ -158,13 +167,15 @@ export default function Edit() {
           <HStack 
             width="full" 
             justifyContent="space-between" 
-            alignItems="center"
+            alignItems="bottom"
           >
             <Language 
               language={language} 
               onSelect={onSelect} 
               width={isMobile ? 'full' : 'auto'}
             />
+            
+           
             <CodeSnippetGenerator />
           </HStack>
 
