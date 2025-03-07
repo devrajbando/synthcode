@@ -1,10 +1,10 @@
 import { useState, useEffect } from "react";
 import { ChevronRight, ChevronDown, Plus, FolderPlus, Pencil, Trash, FolderOpen, File, Folder } from 'lucide-react';
 
-const FileTree = () => {
+const FileTree = ({projectName}) => {
   const [treeData, setTreeData] = useState({
     id: "root",
-    name: "Root",
+    name: projectName||"Root",
     type: "folder",
     isOpen: true,
     children: [],
