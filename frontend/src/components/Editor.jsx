@@ -1,33 +1,54 @@
+"use client"
 import React, { useState, useRef, useEffect } from "react";
 import { HStack, Box, VStack, Flex, useBreakpointValue } from "@chakra-ui/react";
+import{Save} from 'lucide-react';
 import { io } from "socket.io-client";
 import Editor from "@monaco-editor/react";
 import Language from "./Languages";
 import C from "./codesnippet";
+import Snackbar from '@mui/material/Snackbar';
+// import { Toaster } from "./ui/sonner"
+import { toast } from "sonner"
+
 import Output from "./Output";
 import GenerateDoc from "./GenerateDoc";
 import CodeSnippetGenerator from "./CodeSnippetGenerator";
 
-export default function Edit({ selectedFileContent, onSave }) {
+export default function Edit({selectedFile, onSave,isSaving }) {
 
   const [language, setLanguage] = useState("javascript");
-  const [code, setCode] = useState(selectedFileContent || "");
+  const [code, setCode] = useState(selectedFile?.content || C.CODE_SNIPPETS.javascript);
   const editorRef = useRef(null);
   const socket = useRef(null);
-  const [userHighlights, setUserHighlights] = useState({}); // { userId: { lineNumber, color } }
-  const decorationsRef = useRef([]);
+  
 
   useEffect(() => {
-    setCode(selectedFileContent || "");
-  }, [selectedFileContent]);
-
-  // Generate a random color for the current user
-  const [userColor, setUserColor] = useState(getRandomColor());
-
-  function getRandomColor() {
-    const colors = ["#ff5733", "#33ff57", "#3357ff", "#ff33a1", "#ffff33", "#ff7f50", "#7fff50"];
-    return colors[Math.floor(Math.random() * colors.length)];
+    if (selectedFile) {
+      const content = selectedFile.content || C.CODE_SNIPPETS[language] || "";
+      
+      setCode(content);
+      
+      
+      if (editorRef.current) {
+        const editor = editorRef.current;
+        if (editorRef.current) {
+          editorRef.current.setValue(content);
+        }
+      }
+    }
+  }, [selectedFile]);
+  
+  function handleEditorDidMount(editor, monaco) {
+    editorRef.current = editor;
+    if (selectedFile?.content) {
+      editor.setValue(selectedFile.content);
+    }
+    
+    editor.focus();
   }
+
+ 
+  
 
   useEffect(() => {
     socket.current = io("http://localhost:3002");
@@ -63,61 +84,11 @@ export default function Edit({ selectedFileContent, onSave }) {
     };
   }, []);
 
-  function handleEditorDidMount(editor, monaco) {
-    editorRef.current = editor;
-    editor.focus();
+  
 
-    // Emit the current line number when the cursor moves
-    editor.onDidChangeCursorPosition((event) => {
-      if (socket.current) {
-        socket.current.emit("cursor-move", {
-          userId: socket.current.id,
-          lineNumber: event.position.lineNumber,
-          color: userColor,
-        });
-      }
-    });
+  
 
-    // Update highlights periodically
-    setInterval(() => {
-      updateHighlights(editor, monaco);
-    }, 100);
-  }
-
-  function updateHighlights(editor, monaco) {
-    const decorations = Object.keys(userHighlights).map((userId) => {
-      const { lineNumber, color } = userHighlights[userId];
-
-      return {
-        range: new monaco.Range(lineNumber, 1, lineNumber, 1), // Highlight the entire line
-        options: {
-          isWholeLine: true,
-          className: `user-highlight-${userId}`,
-          stickiness: 1, // Ensure the highlight stays in place
-        },
-      };
-    });
-
-    decorationsRef.current = editor.deltaDecorations(decorationsRef.current, decorations);
-  }
-
-  useEffect(() => {
-    // Inject CSS dynamically for each user's highlight
-    Object.keys(userHighlights).forEach((userId) => {
-      const styleId = `highlight-style-${userId}`;
-      if (!document.getElementById(styleId)) {
-        const style = document.createElement("style");
-        style.id = styleId;
-        style.innerHTML = `
-          .user-highlight-${userId} {
-            background-color: ${userHighlights[userId].color};
-            opacity: 0.3;
-          }
-        `;
-        document.head.appendChild(style);
-      }
-    });
-  }, [userHighlights]);
+  
 
   const onSelect = (newLanguage) => {
     setLanguage(newLanguage);
@@ -136,9 +107,37 @@ export default function Edit({ selectedFileContent, onSave }) {
     }
   };
 
-  const handleSave = () => {
-    onSave(code);
+  const handleSave = async () => {
+    if (!selectedFile || isSaving) return;
+    
+    try {
+      const currentContent = editorRef.current?.getValue();
+      if (!currentContent) return;
+            
+        await onSave(currentContent);
+      
+    } catch (error) {
+      console.error('Save failed:', error);
+    }
   };
+
+  const SaveButton = () => (
+    <button
+      onClick={()=>{
+        handleSave()
+          toast("File Saved Successfully")
+      }}
+      disabled={isSaving}
+      className={`btn btn-sm btn-soft btn-primary rounded-none mb-4 ${
+        isSaving ? 'opacity-50 cursor-not-allowed' : ''
+      }`}
+    >
+      {isSaving ? 'Saving...' : 'Save File'} <Save />
+      
+    </button>
+    
+  );
+
 
   const isMobile = useBreakpointValue({ base: true, md: false });
   const layoutDirection = useBreakpointValue({ 
@@ -175,8 +174,12 @@ export default function Edit({ selectedFileContent, onSave }) {
               width={isMobile ? 'full' : 'auto'}
             />
             
-           
+           <div>
+            <SaveButton/>
             <CodeSnippetGenerator />
+
+           </div>
+            
           </HStack>
 
           {/* Monaco Editor */}
@@ -232,6 +235,7 @@ export default function Edit({ selectedFileContent, onSave }) {
           />
         </Box>
       )}
+        
     </Box>
   );
 }

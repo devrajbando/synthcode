@@ -3,13 +3,12 @@ import { ChevronRight, ChevronDown, Plus, FolderPlus, Pencil, Trash, File, Save 
 import Button from '@mui/material/Button';
 import Edit from './Editor';
 
-const FileExplorer = ({ projectName, projectId, projectData }) => {
+const FileExplorer = ({ projectId, projectData }) => {
+  
   const API_URL = import.meta.env.VITE_API_URL;
-  console.log(projectData.name,"h");
-  console.log(projectData.children);
   const [treeData, setTreeData] = useState({
     id: "root",
-    name: "Loading...", // Show loading state initially
+    name: "Loading...", 
     type: "folder",
     isOpen: false,
     children: [],
@@ -27,20 +26,11 @@ const FileExplorer = ({ projectName, projectId, projectData }) => {
     }
   }, [projectData]);
 
-  const removeKeys = (node) => {
-    const { isOpen, id, ...rest } = node;
-    if (rest.children) {
-      rest.children = rest.children.map(removeKeys);
-    }
-    return rest;
-  };
-
+  
   const updateProject = async () => {
     try{
-
     
-    const cleanedData = removeKeys(treeData);
-    console.log("hi",cleanedData);
+    console.log("hi woah hi ",treeData);
     const response = await fetch(`${API_URL}/api/project/${projectId}/update`, {
       method: 'POST',
       headers: {
@@ -48,16 +38,16 @@ const FileExplorer = ({ projectName, projectId, projectData }) => {
       },
       credentials: 'include',
       body: JSON.stringify({
-        projectData:cleanedData,
+        projectData:treeData,
         projectId,
       }),
     });
     if (!response.ok) {
-      console.log(response);
-      return;
+      console.log('failed to save')
     }
-    const data = await response.json();
-    console.log(data);
+    
+    
+    
   }
   catch(err){
     console.log(err);
@@ -73,7 +63,66 @@ useEffect(() => {
 }, [projectData]);
   const [isEditing, setIsEditing] = useState(null);
   const [hoveredNodeId, setHoveredNodeId] = useState(null);
+  const [isSaving, setIsSaving] = useState(false);
+  const [selectedFile, setSelectedFile] = useState(null);
+  const [selectedFileId, setSelectedFileId] = useState(null);
+  const handleFileSelect = (node) => {
+    if (node.type === "file") {
+      setSelectedFile({...node,
+        content: node.content || ''
+      });
+      setSelectedFileId(node.id);
+    
+  }
+}
 
+  const handleSaveContent =  async(fileId, content) => {
+    
+    try {
+     setIsSaving(true);
+     // Update the tree with new content
+     const updatedTree =await updateFileContent(treeData, fileId, content);
+    
+      setTreeData(updatedTree);
+      
+      
+     setSelectedFile(prev => ({ ...prev, content:content }));
+     
+     
+     
+   } catch (error) {
+      console.error('Error saving content:', error);
+   }
+   finally{
+    setIsSaving(false);
+   }
+  };
+  useEffect(() =>{
+    async function update() {
+    
+    await updateProject();
+    }
+    update()
+  }, [treeData]);
+  
+
+  const updateFileContent = (node, fileId, content) => {
+    
+    if (node.id === fileId) {
+      
+      return {
+        ...node,
+        content: content
+      };
+    }
+    if (node.children != []) {
+      return {
+        ...node,
+        children: node.children.map(child => updateFileContent(child, fileId, content))
+      };
+    }
+    return node;
+  };
   const handleAdd = (parentId, type) => {
     const newItem = {
       id: Math.random().toString(36).substr(2, 9),
@@ -156,7 +205,7 @@ useEffect(() => {
     };
   };
 
-  const TreeNode = ({ node, onAdd, onRename, onDelete, onToggle, isEditing, setIsEditing, hoveredNodeId, setHoveredNodeId }) => {
+  const TreeNode = ({ node, onAdd, onRename, onDelete, onToggle, isEditing, setIsEditing, hoveredNodeId, setHoveredNodeId,selectedFileId,onFileSelect }) => {
     const [newName, setNewName] = useState(node.name);
 
     const handleRename = () => {
@@ -200,7 +249,12 @@ useEffect(() => {
               )}
             </button>
           ) : (
-            <div className="flex items-center gap-1">
+            <div 
+  className={`flex items-center gap-1 p-1 rounded cursor-pointer ${
+    node.id === selectedFileId ? 'bg-gray-600' : ''
+  }`}
+  onClick={() => onFileSelect(node)}
+>
               <File size={16} />
               {isEditing === node.id ? (
                 <input
@@ -266,6 +320,8 @@ useEffect(() => {
               setIsEditing={setIsEditing}
               hoveredNodeId={hoveredNodeId}
               setHoveredNodeId={setHoveredNodeId}
+              selectedFileId={selectedFileId}
+              onFileSelect={onFileSelect}
             />
           ))}
       </div>
@@ -275,9 +331,6 @@ useEffect(() => {
   return (
     <div className="flex">
       <div className="p-1 bg-gray-900 w-1/4 max-w-md mx-auto">
-        <button
-          onClick={() => updateProject()}
-          className="btn btn-sm btn-soft btn-primary rounded-none m-2">Save <Save /></button>
         <TreeNode
           node={treeData}
           onAdd={handleAdd}
@@ -288,11 +341,21 @@ useEffect(() => {
           setIsEditing={setIsEditing}
           hoveredNodeId={hoveredNodeId}
           setHoveredNodeId={setHoveredNodeId}
+          selectedFileId={selectedFileId}
+          onFileSelect={handleFileSelect}
         />
       </div>
-      <Edit className="w-3/4" />
+      <Edit className="w-3/4" 
+      selectedFile={selectedFile}
+      onSave={(content) =>{
+       
+        handleSaveContent(selectedFile.id, content)}
+      } 
+      isSaving={isSaving}
+      />
     </div>
   )
 }
+
 
 export default FileExplorer;

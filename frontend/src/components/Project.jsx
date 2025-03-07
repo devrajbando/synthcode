@@ -31,7 +31,7 @@ const [copyColour,setCopyColour]=useState("color-gray-100")
   // const [projectData, setProjectData] = useState(initialProjectData);
   const location = useLocation();
   const projectId = location.state?.projectId || "Default Id";
-  console.log(projectId)
+  
   
   const API_URL = import.meta.env.VITE_API_URL;
   useEffect(() => {
@@ -54,10 +54,8 @@ const [copyColour,setCopyColour]=useState("color-gray-100")
       }
   
       const data = await response.json();
-      console.log(data);
-  console.log(data.data.project.members)
+      
       if (data.statusCode == 200) {
-          console.log('Data successful');
          setProjectDetails({
           _id:data.data.project._id,
           name:data.data.project.name,
@@ -142,7 +140,9 @@ const [copyColour,setCopyColour]=useState("color-gray-100")
       
 {/* <div className='flex'> */}
 
-        <FileExplorer projectName={projectDetails.name} projectId={projectDetails._id} projectData={projectDetails.projectData}/>
+        <FileExplorer 
+        
+        projectId={projectDetails._id} projectData={projectDetails.projectData}/>
         {/* <Edit /> */}
 {/* </div> */}
       

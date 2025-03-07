@@ -136,7 +136,7 @@ const updateProject=asyncHandler(async(req,res)=>{
     if(!project){
         throw new ApiError(404,"Project not found")
     }
-    await Project.findByIdAndUpdate(projectId,
+    const updatedProject=await Project.findByIdAndUpdate(projectId,
         {
             $set: { projectData: projectData }
         },
@@ -144,6 +144,6 @@ const updateProject=asyncHandler(async(req,res)=>{
     )
     return res
     .status(200)
-    .json(new ApiResponse(200,{},"Project Updated Successfully"))
+    .json(new ApiResponse(200,updatedProject,"Project Updated Successfully"))
 })
 export {createNewProject,getData,joinProject,updateProject}
