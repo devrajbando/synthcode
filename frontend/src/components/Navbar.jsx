@@ -70,19 +70,19 @@ const UserDropdown = ({ isOpen, onMouseEnter, onMouseLeave, onProfileClick, onSi
       <div 
         onMouseEnter={onMouseEnter}
         onMouseLeave={onMouseLeave}
-        className="absolute right-0 top-full mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 z-50"
+        className="absolute right-0 top-full w-48 bg-white rounded-lg shadow-lg border border-gray-200 z-50"
       >
         <div className="py-1">
           <button 
             onClick={onProfileClick}
-            className="flex items-center w-full px-4 py-2 text-left text-gray-800 hover:bg-gray-100 transition-colors"
+            className="flex items-center w-full px-4 py-2 text-left text-gray-800 hover:bg-gray-400 transition-colors"
           >
             <Settings className="w-5 h-5 mr-3 text-gray-600" />
             Profile
           </button>
           <button 
             onClick={onSignOutClick}
-            className="flex items-center w-full px-4 py-2 text-left text-red-600 hover:bg-gray-100 transition-colors"
+            className="flex items-center w-full px-4 py-2 text-left text-red-600 hover:bg-gray-400 transition-colors"
           >
             <LogOut className="w-5 h-5 mr-3" />
             Sign Out

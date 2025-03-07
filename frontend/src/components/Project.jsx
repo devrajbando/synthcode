@@ -18,25 +18,21 @@ import FileExplorer from './FileExplorer';
 
 const Project = () => {
   // const { projectId } = useParams();
+  const [selectedFileContent, setSelectedFileContent] = useState("");
 const [projectDetails,setProjectDetails]=useState({
   name:'',
   description:'',
   admin:'',
   members:[],
-  joiningCode:''
+  joiningCode:'',
+  projectData:{}
 })
 const [copyColour,setCopyColour]=useState("color-gray-100")
   // const [projectData, setProjectData] = useState(initialProjectData);
   const location = useLocation();
   const projectId = location.state?.projectId || "Default Id";
-  console.log(projectId)
-  const handleAddFolder = (parentPath) => {
-    const newFolderName = prompt("Enter folder name:");
-    if (newFolderName) {
-      // Logic to add folder (simplified)
-      console.log(`Adding folder ${newFolderName} to ${parentPath}`);
-    }
-  };
+  
+  
   const API_URL = import.meta.env.VITE_API_URL;
   useEffect(() => {
   const getProjectData=async()=>{
@@ -58,16 +54,16 @@ const [copyColour,setCopyColour]=useState("color-gray-100")
       }
   
       const data = await response.json();
-      console.log(data);
-  console.log(data.data.project.members)
+      
       if (data.statusCode == 200) {
-          console.log('Data successful');
          setProjectDetails({
+          _id:data.data.project._id,
           name:data.data.project.name,
           admin:data.data.project.admin,
           joiningCode:data.data.project.joiningCode,
           description:data.data.project.description,
-          members:data.data.project.members
+          members:data.data.project.members,
+          projectData:data.data.project.projectData
          })
 
   
@@ -82,23 +78,7 @@ const [copyColour,setCopyColour]=useState("color-gray-100")
   }
   getProjectData()
 }, [projectId]);
-  const handleAddFile = (parentPath) => {
-    const newFileName = prompt("Enter file name:");
-    if (newFileName) {
-      // Logic to add file (simplified)
-      console.log(`Adding file ${newFileName} to ${parentPath}`);
-    }
-  };
-
-  const handleRename = (path, newName) => {
-    // Logic to rename item (simplified)
-    console.log(`Renaming ${path} to ${newName}`);
-  };
-
-  const handleDelete = (path) => {
-    // Logic to delete item (simplified)
-    console.log(`Deleting ${path}`);
-  };
+  
 
   const copyProjectCode = () => {
     navigator.clipboard.writeText(projectDetails.joiningCode);
@@ -110,29 +90,39 @@ const [copyColour,setCopyColour]=useState("color-gray-100")
     <div className="container mx-auto p-6">
       <div className="flex flex-col">
         {/* Project Details Column */}
-        <div className="bg-gray-900 border rounded-lg p-6 shadow-md">
-          <div className="flex justify-between items-center mb-4">
-            <h1 className="text-2xl font-bold text-blue-800">{projectDetails.name}</h1>
-            <button 
-              onClick={copyProjectCode}
-              className={`flex items-center text-white px-3 py-1 rounded hover:bg-blue-900`}
-            >
-              <Copy className={`w-4 h-4 mr-2 ${copyColour}`} />
-              {projectDetails.joiningCode}
-            </button>
-          </div>
+        <div className="bg-gray-900 border rounded-lg p-6 shadow-md flex justify-between">
+          <div>
 
-          <div className='mb-5'>
-            <h2 className='text-xl font-semibold'>Description: {projectDetails.description}</h2>
+          <div className="flex justify-between items-center mb-4">
+            <h1 className="text-6xl font-bold text-blue-800">{projectDetails.name}</h1>
             
           </div>
 
+          <div className='mb-5'>
+            <h2 className='text-xl font-normal'>{projectDetails.description}</h2>
+            
+          </div>
+              </div>
+
+          <div>
+
           <div className="mb-4">
             <h2 className="text-lg font-semibold mb-2">Team Members</h2>
+            <h3 className='text-md '>Invite your team members to collaborate.
+
+            <button 
+              onClick={copyProjectCode}
+              className={`inline items-center text-white px-3 py-1 rounded hover:bg-blue-900`}
+              >
+              <Copy className={`w-4 h-4 mr-2 inline ${copyColour}`} />
+              {projectDetails.joiningCode}
+            </button>
+            </h3>
+            
             {projectDetails.members.map(member => (
               <div 
               key={member}
-                className="flex items-center justify-between py-1 last:border-b-0"
+              className="flex items-center justify-between py-1 last:border-b-0"
               >
                 <div className="flex items-center">
                   <span>{member}</span>
@@ -142,15 +132,19 @@ const [copyColour,setCopyColour]=useState("color-gray-100")
               </div>
             ))}
           </div>
+          </div>
+
         </div>
 
        
       
-<div className='flex'>
+{/* <div className='flex'> */}
 
-        <FileExplorer projectName={projectDetails.name}/>
-        <Edit/>
-</div>
+        <FileExplorer 
+        
+        projectId={projectDetails._id} projectData={projectDetails.projectData}/>
+        {/* <Edit /> */}
+{/* </div> */}
       
       </div>
     </div>

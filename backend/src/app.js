@@ -35,7 +35,7 @@ app.use(cookieParser())
 
 app.use('/api/users', userRouter);
 app.use('/ai',aiRouter)
-app.use('/api/project',projectRouter)
+app.use('/api/project',projectRouter)  
 
 
 const server = createServer(app);

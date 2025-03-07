@@ -1,5 +1,5 @@
 import { useState,useRef,useEffect } from 'react'
-
+import { Toaster } from "./components/ui/sonner"
 import './App.css'
 import Edit from './components/Editor'
 import { Provider } from "./components/ui/provider"
@@ -68,6 +68,7 @@ function App() {
         <Route path="/create" element={<ProtectedRoute><Create /></ProtectedRoute>} />
         <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
         </Routes>
+        <Toaster />
       <Footer/>
     </Provider>
       </Router>

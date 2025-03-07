@@ -22,7 +22,7 @@ import Langss from './codesnippet.js';
 
             <button className="rounded bg-indigo-950 m-2 p-2 flex pl-4">{language}     
                 <svg width="30px" className="ml-2" height="30px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M7 10L12 15L17 10" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M7 10L12 15L17 10" stroke="#ffffff" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
                 </svg>
             </button>
             

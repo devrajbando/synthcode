@@ -44,7 +44,7 @@ const CodeSnippetGenerator = () => {
   };
 
   return (
-    <div className="mt-12 space-y-4 z-10">
+    <div className="space-y-4 z-10">
       {/* Generate Snippet Button */}
       <button
         className="bg-purple-900 text-white px-4 py-2 rounded hover:bg-purple-950 hover:scale-105 transition-all duration-200"
